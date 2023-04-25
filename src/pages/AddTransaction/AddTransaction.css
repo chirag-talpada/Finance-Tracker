@@ -1,0 +1,52 @@
+.container{
+    width: 570px;
+    margin: 20px auto;
+    
+}
+
+.add-form{
+    background: #fff;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 0 60px 30px;
+}
+
+.feilds-container{
+    /* background: red; */
+    text-align: left;
+    margin-top: 40px;
+}
+
+.form-input{
+    padding: 10px;
+    width: 100%;
+    outline: none;
+}
+
+.feild-title{
+    font-weight: 400;
+    font-size: 14px;
+
+}
+
+.row{
+    margin-bottom: 20px;
+}
+
+.file-input{
+    border: 1px solid gray;
+    resize: none;
+    width: 100%;
+}
+
+.addbtn{
+    width: 100%;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: black;
+    color: #fff;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+}
