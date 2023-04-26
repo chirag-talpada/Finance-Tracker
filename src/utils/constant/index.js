@@ -22,6 +22,9 @@ export const FromToAccount = [
   "Big Block",
 ];
 
+export const GroupByOption=["Month Year","Transaction Type","From Account","To Account"];
+
+
 export const toastOption = {
     position: "top-right",
     autoClose: 5000,
@@ -36,3 +39,4 @@ export const toastOption = {
 export const DateColumnsName=["transactionDate","monthYear"]
 export const charactesColumnsName=["transactionType","fromAccount","toAccount","notes"]
 export const numberColumnsName=["amount"];
+

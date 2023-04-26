@@ -175,6 +175,7 @@ const AddTransaction = () => {
                   optionValue={MonthYearValues}
                   defaultDDLValue={formValues.monthYear}
                   handler={onChangeHandler}
+                  type={1}
                 ></SelectDropDown>
                 {<span className="err">{formErr.monthYear}</span>}
               </div>
@@ -189,6 +190,7 @@ const AddTransaction = () => {
                   optionValue={TransactionType}
                   defaultDDLValue={formValues.transactionType}
                   handler={onChangeHandler}
+                  type={1}
                 />
                 {<span className="err">{formErr.transactionType}</span>}
               </div>
@@ -203,6 +205,7 @@ const AddTransaction = () => {
                   optionValue={FromToAccount}
                   defaultDDLValue={formValues.fromAccount}
                   handler={onChangeHandler}
+                  type={1}
                 />
                 {<span className="err">{formErr.fromAccount}</span>}
               </div>
@@ -217,6 +220,7 @@ const AddTransaction = () => {
                   optionValue={FromToAccount}
                   defaultDDLValue={formValues.toAccount}
                   handler={onChangeHandler}
+                  type={1}
                 />
                 {<span className="err">{formErr.toAccount}</span>}
               </div>

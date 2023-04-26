@@ -1,6 +1,6 @@
 .transection-container{
     background: #fff;
-    width: 1110px;
+    width: 1210px;
     margin: 30px auto;
     border-radius: 10px;
     padding: 15px;
@@ -47,4 +47,14 @@
     padding: 5px 10px;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.groupBy-ddl{
+    padding: 10px 15px;
+    outline: none;
+
+}
+
+.groupBy-row{
+    margin-top: 20px;
 }
