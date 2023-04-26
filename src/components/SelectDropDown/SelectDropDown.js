@@ -1,8 +1,8 @@
 import React from "react";
 
-const SelectDropDown = ({name,selectName,optionValue,handler}) => {
+const SelectDropDown = ({name,selectName,optionValue,handler,defaultDDLValue}) => {
   return (
-    <select name={name} defaultValue="" className="form-input" onChange={handler}>
+    <select value={defaultDDLValue} name={name} className="form-input" onChange={handler}>
       <option value="" disabled>
         Select {selectName}
       </option>
