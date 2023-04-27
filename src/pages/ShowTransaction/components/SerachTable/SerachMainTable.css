@@ -1,0 +1,15 @@
+.search-input{
+    padding: 8px;
+    outline: none;
+}
+
+.searchbtn{
+    padding: 10px 15px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: 20px;
+    background: rgb(42, 128, 240);
+    color: #fff;
+    font-weight: 700;
+}

@@ -40,3 +40,6 @@ export const DateColumnsName=["transactionDate","monthYear"]
 export const charactesColumnsName=["transactionType","fromAccount","toAccount","notes"]
 export const numberColumnsName=["amount"];
 
+export const PAGE_LIMIT=5 ;
+
+export const searchedColumns = ["id","transactionDate","monthYear","transactionType","fromAccount","toAccount","notes","amount"];

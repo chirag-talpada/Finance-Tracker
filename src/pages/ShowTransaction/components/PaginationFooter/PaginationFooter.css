@@ -1,0 +1,30 @@
+.pagination-raw{
+    margin-top: 20px;
+}
+
+.pagination-section{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.pbtn{
+    padding: 10px;
+    background: lightgreen;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    
+}
+
+.current-page{
+    /* background: lightblue; */
+    /* border-radius: 50%; */
+    padding: 10px 15px;
+    color: blue;
+    
+}

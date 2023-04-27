@@ -1,130 +1,113 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { PAGE_LIMIT } from "../../../../utils/constant";
+import { pagination } from "../../../../utils/pagination";
 
-function MainTable({sortColumn,transactionData}) {
+import PaginationFooter from "../PaginationFooter/PaginationFooter";
+import SearchMainTable from "../SerachTable/SerachMainTable";
 
-  const navigate=useNavigate();
 
-  const viewCard=(id)=>{
+function  MainTable({ sortColumn, transactionData,setTransactionData }) {
+  const navigate = useNavigate();
+  const [page, setPage] = useState({});
+
+  useEffect(() => {
+    if (transactionData.length) {
+      let pageData = {};
+      pageData.current = 1;
+      pageData.total_page=Math.ceil(transactionData.length / PAGE_LIMIT);
+      setPage(pageData)
+    }
+  }, [transactionData]);
+
+  const viewCard = (id) => {
     navigate(`/transactions/${id}`);
-  }
+  };
+
+  const transactionHeader = [
+    {
+      title: "ID",
+    },
+    { title: "Transaction Date", onClick: () => sortColumn("transactionDate") },
+    { title: "Month Year", onClick: () => sortColumn("monthYear") },
+    { title: "Transaction Type", onClick: () => sortColumn("transactionType") },
+    { title: "From Account", onClick: () => sortColumn("fromAccount") },
+    { title: "To Account", onClick: () => sortColumn("toAccount") },
+    { title: "Amount", onClick: () => sortColumn("amount") },
+    { title: "Receipt" },
+    { title: "Notes", onClick: () => sortColumn("notes") },
+    { title: "Action" },
+  ];
 
   return (
+    <>
+       <div className="flex">
+          <SearchMainTable setTransactionData={setTransactionData} />
+        </div>  
 
-    <table className="transaction-table">
-      <thead>
-        <tr>
-          <td>ID</td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("transactionDate");
-              }}
-            >
-              Trasaction Date
-            </span>
-          </td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("monthYear");
-              }}
-            >
-              Month Year
-            </span>
-          </td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("transactionType");
-              }}
-            >
-              Transaction Type
-            </span>
-          </td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("fromAccount");
-              }}
-            >
-              From Account
-            </span>
-          </td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("toAccount");
-              }}
-            >
-              To Account
-            </span>
-          </td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("amount");
-              }}
-            >
-              Amount
-            </span>
-          </td>
-          <td>Receipt</td>
-          <td>
-            <span
-              className="tab-sort-btn"
-              onClick={() => {
-                sortColumn("notes");
-              }}
-            >
-              Notes
-            </span>
-          </td>
-          <td>Action</td>
-        </tr>
-      </thead>
-      <tbody>
-        {transactionData.map((raw, i) => {
-          let rupees = new Intl.NumberFormat("en-IN", {
-            style: "currency",
-            currency: "INR",
-          }).format(raw.amount);
+      <table className="transaction-table">
+        <thead>
+          <tr>
+            {transactionHeader.map((header, i) => {
+              return (
+                <td key={i}>
+                  {header?.onClick !== undefined ? (
+                    <span className="tab-sort-btn" onClick={header.onClick}>
+                      {header.title}
+                    </span>
+                  ) : (
+                    <span className="tab-sort-btn">{header.title}</span>
+                  )}
+                </td>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+        
+          {pagination(transactionData,page.current).map((raw, i) => {
+            let rupees = new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(raw.amount);
 
-          return (
-            <tr key={i}>
-              <td>{raw.id}</td>
-              <td>{raw.transactionDate}</td>
-              <td>{raw.monthYear}</td>
-              <td>{raw.transactionType}</td>
-              <td>{raw.fromAccount}</td>
-              <td>{raw.toAccount}</td>
-              <td>{rupees}</td>
-              <td>
-                <div className="table-image">
-                  <img
-                    src={`data:image/${raw.receipt.extension};base64,${raw.receipt.base24String}`}
-                    alt="img"
-                    className="receipt-img"
-                  />
-                </div>
-              </td>
-              <td>{raw.notes}</td>
-              <td>
-                <button className="viewbtn" onClick={()=>{viewCard(raw.id)}}>View</button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-    
+            return (
+              <tr key={i}>
+                <td>{raw.id}</td>
+                <td>{raw.transactionDate}</td>
+                <td>{raw.monthYear}</td>
+                <td>{raw.transactionType}</td>
+                <td>{raw.fromAccount}</td>
+                <td>{raw.toAccount}</td>
+                <td>{rupees}</td>
+                <td>
+                  <div className="table-image">
+                    <img
+                      src={`data:image/${raw.receipt.extension};base64,${raw.receipt.base24String}`}
+                      alt="img"
+                      className="receipt-img"
+                    />
+                  </div>
+                </td>
+                <td>{raw.notes}</td>
+                <td>
+                  <button
+                    className="viewbtn"
+                    onClick={() => {
+                      viewCard(raw.id);
+                    }}
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <PaginationFooter page={page} setPage={setPage}  />
+    </>
   );
 }
 

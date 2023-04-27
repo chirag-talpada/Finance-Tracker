@@ -16,7 +16,7 @@
     border-collapse: collapse;
     text-align: center;
     margin: 0 auto;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .viewbtn{
@@ -56,5 +56,21 @@
 }
 
 .groupBy-row{
+    margin-top: 20px;
+    
+}
+
+.group-tables-row table{
+    width: 100%;
+}
+
+.transaction-table{
+    width: 100%;
+}
+
+.flex{
+    display: flex;
+    justify-content: left;
+    align-items: center;
     margin-top: 20px;
 }

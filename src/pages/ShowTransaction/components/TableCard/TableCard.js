@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./TableCard.css";
 import { useNavigate } from "react-router-dom";
 
-import {sortingData} from "../../../../utils/sorting/index";
+import { sortingData } from "../../../../utils/sorting/index";
 
 const TableCard = ({ tableHeader, tableBody }) => {
   const navigate = useNavigate();
@@ -24,13 +24,41 @@ const TableCard = ({ tableHeader, tableBody }) => {
     navigate(`/transactions/${id}`);
   };
 
-  const getIntialData=()=>{
-    return tableBody
-  }
+  const getIntialData = () => {
+    return tableBody;
+  };
 
   const sortColumn = (column) => {
-    sortingData(column,toggleSort,getIntialData,tableData,setToggleSort,setTableData);
+    sortingData(
+      column,
+      toggleSort,
+      getIntialData,
+      tableData,
+      setToggleSort,
+      setTableData
+    );
   };
+
+  const transactionHeader = [
+    {
+      title: "ID",
+    },
+    { title: "Transaction Date", onClick: () => sortColumn("transactionDate") },
+    { title: "Month Year", onClick: () => sortColumn("monthYear") },
+    { title: "Transaction Type", onClick: () => sortColumn("transactionType") },
+    { title: "From Account", onClick: () => sortColumn("fromAccount") },
+    { title: "To Account", onClick: () => sortColumn("toAccount") },
+    { title: "Amount", onClick: () => sortColumn("amount") },
+    { title: "Receipt" },
+    { title: "Notes", onClick: () => sortColumn("notes") },
+    { title: "Action" },
+  ];
+
+  useEffect(()=>{
+    setTableData(tableBody)
+  },[tableBody])
+ 
+  
 
   return (
     <div>
@@ -40,82 +68,25 @@ const TableCard = ({ tableHeader, tableBody }) => {
       <table className="group-table-card">
         <thead>
           <tr>
-            <td>ID</td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("transactionDate");
-                }}
-              >
-                Trasaction Date
-              </span>
-            </td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("monthYear");
-                }}
-              >
-                Month Year
-              </span>
-            </td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("transactionType");
-                }}
-              >
-                Transaction Type
-              </span>
-            </td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("fromAccount");
-                }}
-              >
-                From Account
-              </span>
-            </td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("toAccount");
-                }}
-              >
-                To Account
-              </span>
-            </td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("amount");
-                }}
-              >
-                Amount
-              </span>
-            </td>
-            <td>Receipt</td>
-            <td>
-              <span
-                className="tab-sort-btn"
-                onClick={() => {
-                  sortColumn("notes");
-                }}
-              >
-                Notes
-              </span>
-            </td>
-            <td>Action</td>
+            {transactionHeader.map((header, i) => {
+              return (
+                <td key={i}>
+                  {header?.onClick !== undefined ? (
+                    <span className="tab-sort-btn" onClick={header.onClick}>
+                      {header.title}
+                    </span>
+                  ) : (
+                    <span className="tab-sort-btn">
+                      {header.title}
+                    </span>
+                  )}
+                </td>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
+          
           {tableData.map((raw, i) => {
             let rupees = new Intl.NumberFormat("en-IN", {
               style: "currency",
@@ -154,6 +125,7 @@ const TableCard = ({ tableHeader, tableBody }) => {
               </tr>
             );
           })}
+          {tableData.length===0 && <tr><td colSpan={10}>Data Not Found</td></tr>}
         </tbody>
       </table>
     </div>
