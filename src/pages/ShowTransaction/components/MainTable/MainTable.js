@@ -1,6 +1,15 @@
 import React from "react";
 
-function MainTable({sortColumn,transactionData,groupBy}) {
+import { useNavigate } from "react-router-dom";
+
+function MainTable({sortColumn,transactionData}) {
+
+  const navigate=useNavigate();
+
+  const viewCard=(id)=>{
+    navigate(`/transactions/${id}`);
+  }
+
   return (
 
     <table className="transaction-table">
@@ -108,7 +117,7 @@ function MainTable({sortColumn,transactionData,groupBy}) {
               </td>
               <td>{raw.notes}</td>
               <td>
-                <button className="viewbtn">View</button>
+                <button className="viewbtn" onClick={()=>{viewCard(raw.id)}}>View</button>
               </td>
             </tr>
           );
