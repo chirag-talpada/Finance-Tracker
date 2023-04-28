@@ -5,38 +5,24 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Header from "./components/Header/Header";
-import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
-import {
-  MonthYear as MonthYearValues,
-  TransactionType,
-  FromToAccount,
-  toastOption,
-} from "../../utils/constant";
+import Form from "../../components/SelectDropDown/Form";
+
+import { initialValues, toastOption } from "../../utils/constant";
 
 import { addData, getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
 
-import {isValidateForm} from "../../utils/Validation/index"
+import { isValidateForm } from "../../utils/Validation/index";
 
 const AddTransaction = () => {
-  const initialValues = {
-    transactionDate: "",
-    monthYear: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    notes: "",
-    receipt: null,
-  };
+  
   const [formErr, setFormErr] = useState({});
   const [formValues, setFormValues] = useState(initialValues);
-
 
   const AddTransaction = async (e) => {
     e.preventDefault();
 
-    let isValid = isValidateForm(formValues,setFormErr);
+    let isValid = isValidateForm(formValues, setFormErr);
 
     if (isValid) {
       let img = await getImageData(formValues.receipt);
@@ -44,11 +30,11 @@ const AddTransaction = () => {
       transactionData.receipt = img;
 
       if (getData("transaction") === null) {
-        transactionData.id=1;
+        transactionData.id = 1;
         addData("transaction", JSON.stringify({ data: [transactionData] }));
       } else {
         let prevData = JSON.parse(getData("transaction"));
-        transactionData.id=(prevData.data.length+1);
+        transactionData.id = prevData.data.length + 1;
         prevData.data.push(transactionData);
         addData("transaction", JSON.stringify(prevData));
       }
@@ -58,21 +44,7 @@ const AddTransaction = () => {
     }
   };
 
-  const onChangeHandler = (e) => {
-    const { name, value, files } = e.target;
 
-    
-
-    if (e.target.getAttribute("type") === "file") {
-      setFormValues((prev) => {
-        return { ...prev, [name]: files[0] };
-      });
-    } else {
-      setFormValues((prev) => {
-        return { ...prev, [name]: value };
-      });
-    }
-  };
 
   return (
     <div className="container">
@@ -92,137 +64,13 @@ const AddTransaction = () => {
         <Header></Header>
 
         <div className="feilds-container">
-          <form onSubmit={AddTransaction}>
-            <div className="row">
-              <div className="feild-title">Transaction Date:</div>
-              <div className="feild-input">
-                <input
-                  type="date"
-                  name="transactionDate"
-                  className="form-input"
-                  onChange={onChangeHandler}
-                  value={formValues.transactionDate}
-                ></input>
-                {<span className="err">{formErr.transactionDate}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">Month Year:</div>
-              <div className="feild-input">
-                <SelectDropDown
-                  name="monthYear"
-                  selectName="Month Year"
-                  optionValue={MonthYearValues}
-                  defaultDDLValue={formValues.monthYear}
-                  handler={onChangeHandler}
-                  type={1}
-                ></SelectDropDown>
-                {<span className="err">{formErr.monthYear}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">Transaction Type:</div>
-              <div className="feild-input">
-                <SelectDropDown
-                  name="transactionType"
-                  selectName="Transaction Type"
-                  optionValue={TransactionType}
-                  defaultDDLValue={formValues.transactionType}
-                  handler={onChangeHandler}
-                  type={1}
-                />
-                {<span className="err">{formErr.transactionType}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">From Account:</div>
-              <div className="feild-input">
-                <SelectDropDown
-                  name="fromAccount"
-                  selectName="From Account"
-                  optionValue={FromToAccount}
-                  defaultDDLValue={formValues.fromAccount}
-                  handler={onChangeHandler}
-                  type={1}
-                />
-                {<span className="err">{formErr.fromAccount}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">To Account:</div>
-              <div className="feild-input">
-                <SelectDropDown
-                  name="toAccount"
-                  selectName="To Account"
-                  optionValue={FromToAccount}
-                  defaultDDLValue={formValues.toAccount}
-                  handler={onChangeHandler}
-                  type={1}
-                />
-                {<span className="err">{formErr.toAccount}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">Amount:</div>
-              <div className="feild-input">
-                <input
-                  name="amount"
-                  type="number"
-                  value={formValues.amount}
-                  onChange={onChangeHandler}
-                  className="form-input"
-                />
-                {<span className="err">{formErr.amount}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">Receipt:</div>
-              <div className="feild-input">
-                <input
-                  name="receipt"
-                  type="file"
-                  className="form-input file-input"
-                  onChange={onChangeHandler}
-                  value={
-                    formValues.receipt !== null
-                      ? formValues.receipt.filename
-                      : ""
-                  }
-                />
-                {<span className="err">{formErr.receipt}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="feild-title">Notes:</div>
-              <div className="feild-input">
-                <textarea
-                  style={{ height: "100px" }}
-                  name="notes"
-                  className="form-input file-input"
-                  placeholder="remarks..."
-                  onChange={onChangeHandler}
-                  value={formValues.notes}
-                />
-                {<span className="err">{formErr.notes}</span>}
-              </div>
-            </div>
-
-            <div className="row">
-              <input
-                type="submit"
-                name="submit"
-                value="ADD"
-                className="addbtn"
-              />
-            </div>
-          </form>
+          <Form
+            onSubmitMethod={AddTransaction}
+            setFormValues={setFormValues}
+            formErr={formErr}
+            formValues={formValues}
+            buttonText="Add"
+          />
         </div>
       </div>
     </div>

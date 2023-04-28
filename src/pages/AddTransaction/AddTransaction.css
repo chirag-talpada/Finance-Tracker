@@ -55,3 +55,32 @@
     color: red;
     font-size: 13px;
 }
+
+.preview-img{
+    width: 100%;
+    object-fit: cover;
+    height: 100%
+}
+
+.preview-div{
+    margin-top: 10px;
+    height: 80px;
+    width: 80px;
+    
+}
+
+.flex-preview{
+    display: flex;
+    align-items: flex-end;
+}
+
+.rm-imgBtn{
+    background: none;
+    padding: 5px;
+    border: none;
+    outline: none;
+    color: red;
+    cursor: pointer;
+    padding-bottom: 0;
+    font-size: 23px;
+}

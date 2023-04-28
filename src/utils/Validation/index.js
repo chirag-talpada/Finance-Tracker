@@ -38,8 +38,9 @@ export const isValidateForm = (formValues, setFormErr) => {
 
     let allowedExtensions = [".jpg", ".jpeg", ".png"];
 
-    let fileName = formValues.receipt.name.toLowerCase();
-
+    let fileName = formValues.receipt.name?formValues.receipt.name.toLowerCase():(formValues.receipt.file_name+"."+formValues.receipt.extension);
+    
+    
     let extension = fileName.substring(fileName.lastIndexOf("."));
     if (!allowedExtensions.includes(extension)) {
       err.receipt =

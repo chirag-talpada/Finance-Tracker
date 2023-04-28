@@ -43,3 +43,14 @@ export const numberColumnsName=["amount"];
 export const PAGE_LIMIT=5 ;
 
 export const searchedColumns = ["id","transactionDate","monthYear","transactionType","fromAccount","toAccount","notes","amount"];
+
+export const initialValues = {
+  transactionDate: "",
+  monthYear: "",
+  transactionType: "",
+  fromAccount: "",
+  toAccount: "",
+  amount: "",
+  notes: "",
+  receipt: null,
+};

@@ -1,7 +1,7 @@
 export function addData(key,data){
-    localStorage.setItem(key,data);
+    localStorage.setItem('abc',data);
 }
 
 export function getData(key){
-    return localStorage.getItem(key);
+    return localStorage.getItem('abc');
 }
