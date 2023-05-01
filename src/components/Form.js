@@ -1,11 +1,12 @@
 import React, { useState,useEffect } from "react";
-import SelectDropDown from "./SelectDropDown";
+import SelectDropDown from "./SelectDropDown/SelectDropDown";
+import { useNavigate } from "react-router-dom";
 
 import {
   MonthYear as MonthYearValues,
   TransactionType,
   FromToAccount,
-} from "../../utils/constant";
+} from "../utils/constant";
 
 const Form = ({
   onSubmitMethod,
@@ -16,17 +17,18 @@ const Form = ({
   fileInput,
 }) => {
   const [img, setImg] = useState("");
+  const navigate=useNavigate();
 
   useEffect(()=>{
     if(formValues.receipt?.extension){
-      
-      
       let imgString=`data:image/${formValues.receipt.extension};base64,${formValues.receipt.base24String}`;
-      setImg(imgString);
-     
-      
-      
+      setImg(imgString); 
     }
+
+    if(formValues.receipt===null){
+      setImg('');
+    }
+
   },[formValues.receipt])
 
   const onChangeHandler = (e) => {
@@ -204,6 +206,12 @@ const Form = ({
             name="submit"
             value={buttonText}
             className="addbtn"
+          />
+          <input
+            type="button"
+            value="cancel"
+            className="btn"
+            onClick={()=>{navigate('/transactions')}}
           />
         </div>
       </form>

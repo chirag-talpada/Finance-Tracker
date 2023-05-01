@@ -7,8 +7,7 @@ import { pagination } from "../../../../utils/pagination";
 import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchMainTable from "../SerachTable/SerachMainTable";
 
-
-function  MainTable({ sortColumn, transactionData,setTransactionData }) {
+function MainTable({ sortColumn, transactionData, setTransactionData }) {
   const navigate = useNavigate();
   const [page, setPage] = useState({});
 
@@ -16,14 +15,18 @@ function  MainTable({ sortColumn, transactionData,setTransactionData }) {
     if (transactionData.length) {
       let pageData = {};
       pageData.current = 1;
-      pageData.total_page=Math.ceil(transactionData.length / PAGE_LIMIT);
-      setPage(pageData)
+      pageData.total_page = Math.ceil(transactionData.length / PAGE_LIMIT);
+      setPage(pageData);
     }
   }, [transactionData]);
 
   const viewCard = (id) => {
-    navigate(`/transactions/${id}`);
+    navigate(`/transaction/${id}`,{state:{toast:false}});
   };
+
+  const editTransaction=(id)=>{
+    navigate(`/transaction/edit/${id}`);
+  }
 
   const transactionHeader = [
     {
@@ -42,9 +45,9 @@ function  MainTable({ sortColumn, transactionData,setTransactionData }) {
 
   return (
     <>
-       <div className="flex">
-          <SearchMainTable setTransactionData={setTransactionData} />
-        </div>  
+      <div className="flex">
+        <SearchMainTable setTransactionData={setTransactionData} />
+      </div>
 
       <table className="transaction-table">
         <thead>
@@ -65,8 +68,7 @@ function  MainTable({ sortColumn, transactionData,setTransactionData }) {
           </tr>
         </thead>
         <tbody>
-        
-          {pagination(transactionData,page.current).map((raw, i) => {
+          {pagination(transactionData, page.current).map((raw, i) => {
             let rupees = new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
@@ -92,6 +94,7 @@ function  MainTable({ sortColumn, transactionData,setTransactionData }) {
                 </td>
                 <td>{raw.notes}</td>
                 <td>
+                  <div className="tableflex">
                   <button
                     className="viewbtn"
                     onClick={() => {
@@ -100,13 +103,24 @@ function  MainTable({ sortColumn, transactionData,setTransactionData }) {
                   >
                     View
                   </button>
+                  <button
+                    className="editbtn"
+                    onClick={() => {
+                      editTransaction(raw.id);
+                    }}
+                  >
+                    edit
+                  </button>
+                  </div>
                 </td>
               </tr>
             );
           })}
+
+          {pagination(transactionData, page.current).length===0 && <tr><td colSpan={10}>No Data found</td></tr>}
         </tbody>
       </table>
-      <PaginationFooter page={page} setPage={setPage}  />
+      <PaginationFooter page={page} setPage={setPage} />
     </>
   );
 }

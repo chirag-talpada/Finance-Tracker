@@ -1,13 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AddTransaction.css";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 import Header from "./components/Header/Header";
-import Form from "../../components/SelectDropDown/Form";
+import Form from "../../components/Form";
 
-import { initialValues, toastOption } from "../../utils/constant";
+import { initialValues } from "../../utils/constant";
 
 import { addData, getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
@@ -18,6 +18,7 @@ const AddTransaction = () => {
   
   const [formErr, setFormErr] = useState({});
   const [formValues, setFormValues] = useState(initialValues);
+  const navigate=useNavigate();
 
   const AddTransaction = async (e) => {
     e.preventDefault();
@@ -27,20 +28,23 @@ const AddTransaction = () => {
     if (isValid) {
       let img = await getImageData(formValues.receipt);
       let transactionData = { ...formValues };
+      let id;
       transactionData.receipt = img;
 
       if (getData("transaction") === null) {
         transactionData.id = 1;
+        id=1;
         addData("transaction", JSON.stringify({ data: [transactionData] }));
       } else {
         let prevData = JSON.parse(getData("transaction"));
         transactionData.id = prevData.data.length + 1;
+        id=prevData.data.length + 1;
         prevData.data.push(transactionData);
         addData("transaction", JSON.stringify(prevData));
       }
 
-      toast("Transaction Added!", toastOption);
-      setFormValues({ ...initialValues });
+      navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction Added!'}});
+      
     }
   };
 
@@ -48,18 +52,7 @@ const AddTransaction = () => {
 
   return (
     <div className="container">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+     
       <div className="add-form">
         <Header></Header>
 

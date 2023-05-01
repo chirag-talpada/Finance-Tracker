@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ShowTransaction.css";
 import { getData } from "../../services/localStorage";
 
@@ -9,6 +10,7 @@ import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
 import { sortingData } from "../../utils/sorting";
+import { loggedout } from "../../services/authentication";
 
 
 const ShowTransaction = () => {
@@ -25,6 +27,7 @@ const ShowTransaction = () => {
   const [transactionData, setTransactionData] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
   const [toggleSort, setToggleSort] = useState(initialValues);
+  const navigate=useNavigate();
 
   const getIntialData = () => {
     let data = JSON.parse(getData("transaction"));
@@ -51,8 +54,15 @@ const ShowTransaction = () => {
     setGroupBy(e.target.value);
   };
 
+  const logoutApp=()=>{
+    loggedout();
+    navigate('/')
+  }
+
   return (
     <div className="transection-container">
+      <button className="add-transaction-btn" onClick={()=>{navigate('/transaction/add')}}>ADD +</button>
+      <button className="logout-btn" onClick={()=>{logoutApp()}}> logout</button>
       <h1>All Transaction</h1>
 
       <div className="groupBy-row">

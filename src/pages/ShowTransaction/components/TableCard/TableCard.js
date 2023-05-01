@@ -21,9 +21,13 @@ const TableCard = ({ tableHeader, tableBody }) => {
   const [toggleSort, setToggleSort] = useState(initialValues);
 
   const viewCard = (id) => {
-    navigate(`/transactions/${id}`);
+    navigate(`/transaction/${id}`,{state:{toast:false}});
   };
 
+  const editTransaction=(id)=>{
+    navigate(`/transaction/edit/${id}`);
+  }
+  
   const getIntialData = () => {
     return tableBody;
   };
@@ -113,6 +117,7 @@ const TableCard = ({ tableHeader, tableBody }) => {
                 </td>
                 <td>{raw.notes}</td>
                 <td>
+                <div className="tableflex">
                   <button
                     className="viewbtn"
                     onClick={() => {
@@ -121,6 +126,15 @@ const TableCard = ({ tableHeader, tableBody }) => {
                   >
                     View
                   </button>
+                  <button
+                    className="editbtn"
+                    onClick={() => {
+                      editTransaction(raw.id);
+                    }}
+                  >
+                    edit
+                  </button>
+                  </div>
                 </td>
               </tr>
             );

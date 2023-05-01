@@ -1,0 +1,23 @@
+.signin-title h2{
+    text-align: center;
+    padding-top: 20px;
+}
+
+.feilds-container{
+    margin-top: 25px;
+}
+
+.signin-btn{
+    background: black;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.link{
+    color: blue;
+    text-decoration: underline;
+}

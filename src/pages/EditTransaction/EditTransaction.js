@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import "./EditTransaction.css";
 import Header from "../AddTransaction/components/Header/Header";
-import Form from "../../components/SelectDropDown/Form";
+import Form from "../../components/Form";
 import { isValidateForm } from "../../utils/Validation";
-import { initialValues, toastOption } from "../../utils/constant";
+import { initialValues } from "../../utils/constant";
 import { getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
 import { addData } from "../../services/localStorage";
-import { ToastContainer, toast } from "react-toastify";
+
 
 const EditTransaction = () => {
   const [formErr, setFormErr] = useState({});
   const [formValues, setFormValues] = useState(initialValues);
   const [transactionFile, setTransactionFile] = useState(null);
   const [transaction, setTransaction] = useState({});
+  const navigate=useNavigate();
+
   const fileInput = useRef();
   const { id } = useParams();
 
@@ -71,24 +73,13 @@ const EditTransaction = () => {
       allTransactions[Number(id) - 1] = { ...transactionData };
       
       addData("transaction", JSON.stringify({"data":allTransactions}));
-      toast("Transaction updated!", toastOption);
+      // toast("Transaction updated!", toastOption);
+      navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction updated!'}});
     }
   };
 
   return (
     <div className="container">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <div className="add-form">
         <Header></Header>
 
