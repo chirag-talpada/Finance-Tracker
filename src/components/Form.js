@@ -153,7 +153,9 @@ const Form = ({
         <div className="row">
           <div className="feild-title">Receipt:</div>
           <div className="feild-input">
-            {img === "" ? (
+            
+            {img === "" && formValues.receipt===null ? 
+            (
               <input
                 name="receipt"
                 type="file"
@@ -167,6 +169,9 @@ const Form = ({
                     : ""
                 }
               />
+          
+              
+              
             ) : (
               <div className="flex-preview">
 

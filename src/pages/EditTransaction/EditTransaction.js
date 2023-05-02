@@ -73,7 +73,6 @@ const EditTransaction = () => {
       allTransactions[Number(id) - 1] = { ...transactionData };
       
       addData("transaction", JSON.stringify({"data":allTransactions}));
-      // toast("Transaction updated!", toastOption);
       navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction updated!'}});
     }
   };
