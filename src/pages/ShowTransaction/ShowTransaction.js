@@ -10,7 +10,7 @@ import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
 import { sortingData } from "../../utils/sorting";
-import { loggedout } from "../../services/authentication";
+import {  getUserID, loggedout } from "../../services/authentication";
 
 
 const ShowTransaction = () => {
@@ -25,18 +25,21 @@ const ShowTransaction = () => {
   };
 
   const [transactionData, setTransactionData] = useState([]);
+  const [transactionDataCount, setTransactionDataCount] = useState(0);
   const [groupBy, setGroupBy] = useState("none");
   const [toggleSort, setToggleSort] = useState(initialValues);
   const navigate=useNavigate();
 
   const getIntialData = () => {
-    let data = JSON.parse(getData("transaction"));
-    return data.data;
+    let data = getData("transaction");
+    let userID=getUserID();
+    return data[userID]??[];
   };
 
   useEffect(() => {
     const data = getIntialData();
     setTransactionData(data);
+    setTransactionDataCount(data.length)
   }, []);
 
   const sortColumn = (column) => {
@@ -78,13 +81,16 @@ const ShowTransaction = () => {
        
       </div>
 
-      {groupBy === "none" && (
-        <MainTable sortColumn={sortColumn} setTransactionData={setTransactionData} transactionData={transactionData} />
+    
+      {groupBy === "none" &&  (   
+        <MainTable sortColumn={sortColumn} transactionDataCount={transactionDataCount} setTransactionData={setTransactionData} transactionData={transactionData} />
       )}
 
-      {groupBy !== "none" && (
+      {groupBy !== "none" && (transactionData.length!==0) && (
         <GroupTable groupBy={groupBy} transactionData={transactionData} />
       )}
+
+      {groupBy !== "none" && transactionData.length===0 && (<h1 className="empty-data">there is no data</h1>)}
     </div>
   );
 };

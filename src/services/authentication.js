@@ -19,6 +19,12 @@ const storeToken=(id)=>{
     localStorage.setItem('token',token);
 }
 
+export const getUserID=()=>{
+    let token=localStorage.getItem('token');
+    let tokenID=Number(token.split(',')[1]);
+    return tokenID;
+}
+
 const hasUser=(id)=>{
     let userData=getUserData();
 

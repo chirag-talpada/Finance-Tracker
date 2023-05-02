@@ -11,6 +11,7 @@ import { initialValues } from "../../utils/constant";
 
 import { addData, getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
+import { getUserID } from "../../services/authentication";
 
 import { isValidateForm } from "../../utils/Validation/index";
 
@@ -29,17 +30,24 @@ const AddTransaction = () => {
       let img = await getImageData(formValues.receipt);
       let transactionData = { ...formValues };
       let id;
+      let userID=getUserID();
       transactionData.receipt = img;
+     
 
-      if (getData("transaction") === null) {
+      let allUserData=getData("transaction");
+    
+
+      if (allUserData[userID]===undefined) {
+  
         transactionData.id = 1;
         id=1;
-        addData("transaction", JSON.stringify({ data: [transactionData] }));
+        allUserData[userID]=[transactionData]
+        addData("transaction", JSON.stringify(allUserData));
       } else {
-        let prevData = JSON.parse(getData("transaction"));
-        transactionData.id = prevData.data.length + 1;
-        id=prevData.data.length + 1;
-        prevData.data.push(transactionData);
+        let prevData = getData("transaction");
+        transactionData.id = prevData[userID].length + 1;
+        id=prevData[userID].length + 1;
+        prevData[userID].push(transactionData);
         addData("transaction", JSON.stringify(prevData));
       }
 
