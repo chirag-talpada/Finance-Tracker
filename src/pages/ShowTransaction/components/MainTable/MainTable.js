@@ -7,7 +7,7 @@ import { pagination } from "../../../../utils/pagination";
 import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchMainTable from "../SerachTable/SerachMainTable";
 
-function MainTable({ sortColumn, transactionData, setTransactionData }) {
+function MainTable({ sortColumn, transactionDataCount,transactionData, setTransactionData }) {
   const navigate = useNavigate();
   const [page, setPage] = useState({});
 
@@ -45,9 +45,10 @@ function MainTable({ sortColumn, transactionData, setTransactionData }) {
 
   return (
     <>
-      <div className="flex">
+      
+      {transactionDataCount!==0 && <div className="flex">
         <SearchMainTable setTransactionData={setTransactionData} />
-      </div>
+      </div>}
 
       <table className="transaction-table">
         <thead>
@@ -120,7 +121,7 @@ function MainTable({ sortColumn, transactionData, setTransactionData }) {
           {pagination(transactionData, page.current).length===0 && <tr><td colSpan={10}>No Data found</td></tr>}
         </tbody>
       </table>
-      <PaginationFooter page={page} setPage={setPage} />
+      { transactionData.length!==0 && <PaginationFooter page={page} setPage={setPage} />}
     </>
   );
 }

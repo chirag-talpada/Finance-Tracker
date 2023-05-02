@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./TransactionCard.css";
 
 import { useParams } from "react-router-dom";
@@ -9,20 +9,26 @@ import Card from "./components/Card/Card";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toastOption } from "../../utils/constant";
+import { getUserID } from "../../services/authentication";
 
 const TransactionCard = () => {
   const { id } = useParams();
   const location = useLocation();
   const [transaction, setTransaction] = useState({});
-
+  const navigate=useNavigate();
   
   useEffect(() => {
-    let { data } = JSON.parse(getData("transaction"));
-    let [x] = data.filter((raw) => raw.id === Number(id));
-    setTransaction(x);
+    let data = getData("transaction");
+    let userID=getUserID();
+    
+    const [transactionCardData]=data[userID].filter(tran=>tran.id===Number(id))
+    
+    
+    setTransaction(transactionCardData);
 
     if(location.state?.toast){
       toast(location.state?.msg, toastOption);
+      navigate(location.pathname, { replace: true })
     }
     
     

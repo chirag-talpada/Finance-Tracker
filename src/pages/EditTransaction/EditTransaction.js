@@ -9,6 +9,7 @@ import { initialValues } from "../../utils/constant";
 import { getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
 import { addData } from "../../services/localStorage";
+import { getUserID } from "../../services/authentication";
 
 
 const EditTransaction = () => {
@@ -22,8 +23,10 @@ const EditTransaction = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    let { data } = JSON.parse(getData("transaction"));
-    let [editedTransaction] = data.filter((raw) => raw.id === Number(id));
+    let  data  = getData("transaction");
+    let userID=getUserID();
+    
+    let [editedTransaction] = data[userID].filter((raw) => raw.id === Number(id));
     
     //let fileObject = getImageObject(editedTransaction);
 
@@ -60,6 +63,7 @@ const EditTransaction = () => {
 
     if (isValid) {
       let transactionData = { ...formValues };
+      let userID=getUserID();
 
       if(!formValues.receipt.extension){
         let img = await getImageData(formValues.receipt);
@@ -68,11 +72,11 @@ const EditTransaction = () => {
 
       transactionData.id = Number(id);
 
-      let allTransactions = [...transaction];
+      let allTransactions = {...transaction};
 
-      allTransactions[Number(id) - 1] = { ...transactionData };
+      allTransactions[userID][Number(id) - 1] = { ...transactionData };
       
-      addData("transaction", JSON.stringify({"data":allTransactions}));
+      addData("transaction", JSON.stringify(allTransactions));
       navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction updated!'}});
     }
   };

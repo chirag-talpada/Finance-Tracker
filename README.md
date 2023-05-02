@@ -73,3 +73,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 <div>
       <img src={`data:${mediaType};base64,${imageData}`} alt="Base64 encoded image" />
 </div>
+

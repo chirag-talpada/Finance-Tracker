@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from "react";
 import "./SerachMainTable.css";
 import { getData } from "../../../../services/localStorage";
+import { getUserID } from "../../../../services/authentication";
 
 const SearchMainTable = ({setTransactionData}) => {
 
@@ -9,8 +10,9 @@ const SearchMainTable = ({setTransactionData}) => {
 
 
   useEffect(()=>{
-    let {data} = JSON.parse(getData("transaction"));
-    setSearchTransactionData(data)
+    let data = getData("transaction");
+    let userID=getUserID();
+    setSearchTransactionData(data[userID])
   },[])
 
   const searchData=(pattern)=>{

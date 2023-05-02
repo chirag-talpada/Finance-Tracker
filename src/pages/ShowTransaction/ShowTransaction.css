@@ -17,7 +17,7 @@
     border-collapse: collapse;
     text-align: center;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .viewbtn,.editbtn{
@@ -100,4 +100,12 @@
 .tableflex{
     display: flex;
     gap: 5px;
+}
+
+.empty-data{
+    font-size: 19px;
+    margin-top: 40px;
+    padding: 30px 20px;
+    background: lightgray;
+    border-radius: 10px;
 }

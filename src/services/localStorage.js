@@ -1,9 +1,17 @@
+
 export function addData(key,data){
     localStorage.setItem(key,data);
 }
 
 export function getData(key){
-    return localStorage.getItem(key);
+
+    let Transactiondata=JSON.parse(localStorage.getItem(key));
+
+    if(!Transactiondata){
+        return {};
+    }
+
+    return Transactiondata;
 }
 
 export function saveUser(data){
