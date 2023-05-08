@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./EditTransaction.css";
@@ -13,13 +13,13 @@ import { getUserID } from "../../services/authentication";
 
 
 const EditTransaction = () => {
-  const [formErr, setFormErr] = useState({});
+ 
   const [formValues, setFormValues] = useState(initialValues);
   const [transactionFile, setTransactionFile] = useState(null);
   const [transaction, setTransaction] = useState({});
   const navigate=useNavigate();
 
-  const fileInput = useRef();
+ 
   const { id } = useParams();
 
   useEffect(() => {
@@ -28,7 +28,6 @@ const EditTransaction = () => {
     
     let [editedTransaction] = data[userID].filter((raw) => raw.id === Number(id));
     
-    //let fileObject = getImageObject(editedTransaction);
 
     setTransactionFile(editedTransaction?.receipt);
     setEditFormValues(editedTransaction);
@@ -59,26 +58,26 @@ const EditTransaction = () => {
   const editTransaction = async (e) => {
     e.preventDefault();
 
-    let isValid = isValidateForm(formValues, setFormErr);
+   
 
-    if (isValid) {
-      let transactionData = { ...formValues };
-      let userID=getUserID();
+    // if (isValid) {
+    //   let transactionData = { ...formValues };
+    //   let userID=getUserID();
 
-      if(!formValues.receipt.extension){
-        let img = await getImageData(formValues.receipt);
-        transactionData.receipt = img;
-      }
+    //   if(!formValues.receipt.extension){
+    //     let img = await getImageData(formValues.receipt);
+    //     transactionData.receipt = img;
+    //   }
 
-      transactionData.id = Number(id);
+    //   transactionData.id = Number(id);
 
-      let allTransactions = {...transaction};
+    //   let allTransactions = {...transaction};
 
-      allTransactions[userID][Number(id) - 1] = { ...transactionData };
+    //   allTransactions[userID][Number(id) - 1] = { ...transactionData };
       
-      addData("transaction", JSON.stringify(allTransactions));
-      navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction updated!'}});
-    }
+    //   addData("transaction", JSON.stringify(allTransactions));
+    //   navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction updated!'}});
+    // }
   };
 
   return (
@@ -89,10 +88,6 @@ const EditTransaction = () => {
         <div className="feilds-container">
           <Form
             onSubmitMethod={editTransaction}
-            setFormValues={setFormValues}
-            formErr={formErr}
-            formValues={formValues}
-            fileInput={fileInput}
             buttonText="Update"
           />
         </div>

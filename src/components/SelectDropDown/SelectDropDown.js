@@ -1,13 +1,13 @@
 /* eslint-disable no-unreachable */
 import React from "react";
 
-const SelectDropDown = ({name,selectName,cssClass,optionValue,handler,defaultDDLValue,type}) => {
+const SelectDropDown = ({register,name,selectName,cssClass,optionValue,handler,type}) => {
 
 
   switch(type){
     case 1:
       return (
-        <select value={defaultDDLValue} name={name} className="form-input" onChange={handler}>
+        <select { ...register && {...register(name)}} defaultValue={""} className="form-input" >
           <option value="" disabled>
             Select {selectName}
           </option>
@@ -19,7 +19,7 @@ const SelectDropDown = ({name,selectName,cssClass,optionValue,handler,defaultDDL
     break;
     case 2:
       return (
-        <select defaultValue={"none"} name={name} className={cssClass} onChange={handler}>
+        <select  defaultValue={"none"} name={name} className={cssClass} onChange={handler}>
           <option value="none">
             none
           </option>

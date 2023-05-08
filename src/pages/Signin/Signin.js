@@ -69,8 +69,9 @@ const Signin = () => {
   useEffect(() => {
     if (location.state?.toast) {
       toast(location.state?.msg, toastOption);
-      navigate(location. pathname, { replace: true })
+      navigate(location.pathname, { replace: true })
     } 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state?.msg, location.state?.toast]);
 
   return (

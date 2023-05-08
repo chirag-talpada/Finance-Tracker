@@ -1,3 +1,6 @@
+import * as yup from "yup";
+import { validExtemsions } from "../constant";
+
 export const isValidateForm = (formValues, setFormErr) => {
   let err = {};
 
@@ -60,3 +63,56 @@ export const isValidateForm = (formValues, setFormErr) => {
 
   return Object.keys(err).length > 0 ? false : true;
 };
+
+export const validationShema=yup.object().shape({
+  transactionDate: yup
+    .date()
+    .typeError("please enter valid date")
+    .min("1970-01-01", "Date is too early"),
+  monthYear: yup.string().required("month year is required"),
+  transactionType: yup.string().required("Transaction Type is required"),
+  fromAccount: yup.string().required("From Account is required"),
+  toAccount: yup
+    .string()
+    .required("To Account is required")
+    .test(
+      "compare",
+      "To Account and from account cannot be the same",
+      (value, testContext) => {
+        if (testContext.parent.fromAccount === value) return false;
+        return true;
+      }
+    ),
+  amount: yup
+    .number()
+    .typeError("amount is required")
+    .min(1, "amount must be greater than 0"),
+  receipt: yup
+    .mixed()
+    .test("required", "receipt is required!", (file) => {
+      if (file.length === 0) {
+        return false;
+      }
+      return true;
+    })
+    .test("size", "size must be less than 1MB", (file) => {
+      if (file[0]?.size > 1048576) {
+        return false;
+      }
+      return true;
+    })
+    .test(
+      "format",
+      "Invalid file type. Only JPG, JPEG, and PNG files are allowed.",
+      (file) => {
+        if (!validExtemsions.includes(file[0]?.type)) {
+          return false;
+        }
+        return true;
+      }
+    ),
+  notes: yup
+    .string()
+    .required("notes is required")
+    .max(250, "notes must be greater than 250 charactres"),
+});
