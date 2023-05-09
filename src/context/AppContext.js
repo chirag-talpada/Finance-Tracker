@@ -11,7 +11,20 @@ const AppState = ({ children }) => {
       setTransaction(data)
   } 
 
-  return <appContext.Provider value={{transactions,updateTransactionData}}>
+  const deleteUserTransaction=(userID,transactionId)=>{
+    let data={...transactions};
+    // let filterData=data[userID].filter(x=>x.id!==transactionId);
+    
+    data[userID]=data[userID].filter(x=>x.id!==transactionId);
+
+    setTransaction(data);
+    
+    
+     
+    
+  }
+
+  return <appContext.Provider value={{transactions,updateTransactionData,deleteUserTransaction}}>
     {children}
     </appContext.Provider>;
 };

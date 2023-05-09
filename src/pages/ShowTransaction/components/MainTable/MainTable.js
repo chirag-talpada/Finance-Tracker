@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { PAGE_LIMIT } from "../../../../utils/constant";
@@ -6,10 +6,14 @@ import { pagination } from "../../../../utils/pagination";
 
 import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchMainTable from "../SerachTable/SerachMainTable";
+import { getUserID } from "../../../../services/authentication";
+import { appContext } from "../../../../context/AppContext";
 
 function MainTable({ sortColumn, transactionDataCount,transactionData, setTransactionData }) {
   const navigate = useNavigate();
   const [page, setPage] = useState({});
+  const [userID, ] = useState(getUserID());
+  const {transactions,deleteUserTransaction}=useContext(appContext);
 
   useEffect(() => {
     if (transactionData.length) {
@@ -26,6 +30,11 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
 
   const editTransaction=(id)=>{
     navigate(`/transaction/edit/${id}`);
+  }
+
+  const deleteTransaction=(id)=>{
+    deleteUserTransaction(userID,id) 
+    
   }
 
   const transactionHeader = [
@@ -69,7 +78,7 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
           </tr>
         </thead>
         <tbody>
-          {pagination(transactionData, page.current).map((raw, i) => {
+          {pagination(transactions[userID], page.current).map((raw, i) => {
             let rupees = new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
@@ -112,13 +121,21 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
                   >
                     edit
                   </button>
+                  <button
+                    className="deletebtn"
+                    onClick={() => {
+                      deleteTransaction(raw.id);
+                    }}
+                  >
+                    delete
+                  </button>
                   </div>
                 </td>
               </tr>
             );
           })}
 
-          {pagination(transactionData, page.current).length===0 && <tr><td colSpan={10}>No Data found</td></tr>}
+          {pagination(transactions[userID], page.current).length===0 && <tr><td colSpan={10}>No Data found</td></tr>}
         </tbody>
       </table>
       { transactionData.length!==0 && <PaginationFooter page={page} setPage={setPage} />}
