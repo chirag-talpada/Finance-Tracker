@@ -3,3 +3,5 @@
 ## refactor code
 ## (Validation using yup)
 ## (form state management using react-hook-form)
+## (Context API)
+## (delete transaction)
