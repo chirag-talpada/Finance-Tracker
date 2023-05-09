@@ -1,18 +1,19 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useContext} from "react";
 import "./SerachMainTable.css";
-import { getData } from "../../../../services/localStorage";
 import { getUserID } from "../../../../services/authentication";
+import { appContext } from "../../../../context/AppContext";
 
 const SearchMainTable = ({setTransactionData}) => {
 
 
   const [searchTransactionData,setSearchTransactionData]=useState([]);
-
+  const {transactions}=useContext(appContext);
 
   useEffect(()=>{
-    let data = getData("transaction");
+    let data = transactions;
     let userID=getUserID();
     setSearchTransactionData(data[userID])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   const searchData=(pattern)=>{

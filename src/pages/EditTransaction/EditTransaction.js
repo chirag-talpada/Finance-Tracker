@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import "./EditTransaction.css";
 import Header from "../AddTransaction/components/Header/Header";
 import Form from "../../components/Form";
-import { addData, getData } from "../../services/localStorage";
 import { getUserID } from "../../services/authentication";
 import { convertDate } from "../../helper/date";
 import { getImageData } from "../../services/ImageBase24";
+import { appContext } from "../../context/AppContext";
 
 const EditTransaction = () => {
   const [formValues, setFormValues] = useState({});
   const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
+  const {transactions,updateTransactionData}=useContext(appContext);
 
   const { id } = useParams();
 
   useEffect(() => {
-    let data = getData("transaction");
+    let data = transactions;
     let userID = getUserID();
 
     let [editedTransaction] = data[userID].filter(
@@ -52,7 +53,7 @@ const EditTransaction = () => {
     transactionData.id = Number(id);
     let allTransactions = { ...transaction };
     allTransactions[userID][Number(id) - 1] = { ...transactionData };
-    addData("transaction", JSON.stringify(allTransactions));
+    updateTransactionData(allTransactions)
     navigate(`/transaction/${id}`, {
       state: { toast: true, msg: "Transaction updated!" },
     });

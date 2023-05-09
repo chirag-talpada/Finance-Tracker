@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddTransaction.css";
 
 import Header from "./components/Header/Header";
 import Form from "../../components/Form";
 
-import { addData, getData } from "../../services/localStorage";
+
 import { getImageData } from "../../services/ImageBase24";
 import { getUserID } from "../../services/authentication";
 import { convertDate } from "../../helper/date";
+import { appContext } from "../../context/AppContext";
 
 
 const AddTransaction = () => {
   const navigate = useNavigate();
+  const {transactions,updateTransactionData}=useContext(appContext);
 
   const initialFormValues = {
     transactionDate: "",
@@ -35,19 +37,19 @@ const AddTransaction = () => {
       transactionData.transactionDate
     );
 
-    let allUserData = getData("transaction");
+    let allUserData = transactions;
 
     if (allUserData[userID] === undefined) {
       transactionData.id = 1;
       id = 1;
       allUserData[userID] = [transactionData];
-      addData("transaction", JSON.stringify(allUserData));
+      updateTransactionData(allUserData);
     } else {
-      let prevData = getData("transaction");
+      let prevData = transactions;
       transactionData.id = prevData[userID].length + 1;
       id = prevData[userID].length + 1;
       prevData[userID].push(transactionData);
-      addData("transaction", JSON.stringify(prevData));
+      updateTransactionData(prevData);
     }
 
     navigate(`/transaction/${id}`, {

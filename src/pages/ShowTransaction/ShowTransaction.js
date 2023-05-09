@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShowTransaction.css";
-import { getData } from "../../services/localStorage";
+
 
 import MainTable from "./components/MainTable/MainTable";
 import GroupTable from "./components/GroupTable/GroupTable";
@@ -11,6 +11,7 @@ import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 import { GroupByOption } from "../../utils/constant";
 import { sortingData } from "../../utils/sorting";
 import {  getUserID, loggedout } from "../../services/authentication";
+import { appContext } from "../../context/AppContext";
 
 
 const ShowTransaction = () => {
@@ -30,8 +31,10 @@ const ShowTransaction = () => {
   const [toggleSort, setToggleSort] = useState(initialValues);
   const navigate=useNavigate();
 
-  const getIntialData = () => {
-    let data = getData("transaction");
+  const {transactions}=useContext(appContext);
+
+  const getIntialData = () => { 
+    let data = transactions;
     let userID=getUserID();
     return data[userID]??[];
   };
