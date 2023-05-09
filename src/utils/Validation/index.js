@@ -41,9 +41,10 @@ export const isValidateForm = (formValues, setFormErr) => {
 
     let allowedExtensions = [".jpg", ".jpeg", ".png"];
 
-    let fileName = formValues.receipt.name?formValues.receipt.name.toLowerCase():(formValues.receipt.file_name+"."+formValues.receipt.extension);
-    
-    
+    let fileName = formValues.receipt.name
+      ? formValues.receipt.name.toLowerCase()
+      : formValues.receipt.file_name + "." + formValues.receipt.extension;
+
     let extension = fileName.substring(fileName.lastIndexOf("."));
     if (!allowedExtensions.includes(extension)) {
       err.receipt =
@@ -64,7 +65,7 @@ export const isValidateForm = (formValues, setFormErr) => {
   return Object.keys(err).length > 0 ? false : true;
 };
 
-export const validationShema=yup.object().shape({
+export const validationShema = yup.object().shape({
   transactionDate: yup
     .date()
     .typeError("please enter valid date")
@@ -105,6 +106,12 @@ export const validationShema=yup.object().shape({
       "format",
       "Invalid file type. Only JPG, JPEG, and PNG files are allowed.",
       (file) => {
+        if (typeof file === "string") {
+          if (file.startsWith("data:")) {
+            return true;
+          }
+        }
+
         if (!validExtemsions.includes(file[0]?.type)) {
           return false;
         }

@@ -5,25 +5,35 @@ import "./AddTransaction.css";
 import Header from "./components/Header/Header";
 import Form from "../../components/Form";
 
-
-
 import { addData, getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
 import { getUserID } from "../../services/authentication";
-
+import { convertDate } from "../../helper/date";
 
 
 const AddTransaction = () => {
   const navigate = useNavigate();
 
-  const AddTransaction = async (data) => {
+  const initialFormValues = {
+    transactionDate: "",
+    monthYear: "",
+    transactionType: "",
+    fromAccount: "",
+    toAccount: "",
+    amount: "",
+    notes: "",
+  };
 
+  const AddTransaction = async (data) => {
     let img = await getImageData(data.receipt[0]);
 
     let transactionData = { ...data };
     let id;
     let userID = getUserID();
     transactionData.receipt = img;
+    transactionData.transactionDate = convertDate(
+      transactionData.transactionDate
+    );
 
     let allUserData = getData("transaction");
 
@@ -43,8 +53,6 @@ const AddTransaction = () => {
     navigate(`/transaction/${id}`, {
       state: { toast: true, msg: "Transaction Added!" },
     });
-
-   
   };
 
   return (
@@ -56,6 +64,7 @@ const AddTransaction = () => {
           <Form
             onSubmitMethod={AddTransaction}
             buttonText="Add"
+            formValues={initialFormValues}
           />
         </div>
       </div>

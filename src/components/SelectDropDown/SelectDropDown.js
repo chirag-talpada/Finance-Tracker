@@ -1,38 +1,65 @@
 /* eslint-disable no-unreachable */
 import React from "react";
 
-const SelectDropDown = ({register,name,selectName,cssClass,optionValue,handler,type}) => {
+const SelectDropDown = ({
+  defaultValue,
+  register,
+  name,
+  selectName,
+  cssClass,
+  optionValue,
+  handler,
+  type,
+}) => {
 
+  
+  
 
-  switch(type){
+  switch (type) {
     case 1:
       return (
-        <select { ...register && {...register(name)}} defaultValue={""} className="form-input" >
+      
+        
+        <select
+          {...(register && { ...register(name) })}
+          defaultValue={defaultValue}
+          className="form-input"
+        >
           <option value="" disabled>
             Select {selectName}
           </option>
-          {optionValue.map((data,i) => {
-            return <option key={i} value={data}>{data}</option>;
+          {optionValue.map((data, i) => {
+            return (
+              <option key={i} value={data}>
+                {data}
+              </option>
+            );
           })}
         </select>
+        
       );
-    break;
+      break;
     case 2:
       return (
-        <select  defaultValue={"none"} name={name} className={cssClass} onChange={handler}>
-          <option value="none">
-            none
-          </option>
-          {optionValue.map((data,i) => {
-            return <option key={i} value={data}>{data}</option>;
+        <select
+          defaultValue={"none"}
+          name={name}
+          className={cssClass}
+          onChange={handler}
+        >
+          <option value="none">none</option>
+          {optionValue.map((data, i) => {
+            return (
+              <option key={i} value={data}>
+                {data}
+              </option>
+            );
           })}
         </select>
       );
-    break;
+      break;
     default:
   }
-
-  
 };
 
 export default SelectDropDown;
