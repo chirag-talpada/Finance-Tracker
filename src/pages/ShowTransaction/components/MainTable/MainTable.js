@@ -33,7 +33,11 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
   }
 
   const deleteTransaction=(id)=>{
-    deleteUserTransaction(userID,id) 
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm("Are you sure you want to delete this transaction?")===true){
+
+      deleteUserTransaction(userID,id) 
+    }
     
   }
 

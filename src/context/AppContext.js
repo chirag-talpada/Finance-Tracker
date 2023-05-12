@@ -13,8 +13,6 @@ const AppState = ({ children }) => {
 
   const deleteUserTransaction=(userID,transactionId)=>{
     let data={...transactions};
-    // let filterData=data[userID].filter(x=>x.id!==transactionId);
-    
     data[userID]=data[userID].filter(x=>x.id!==transactionId);
 
     setTransaction(data);
