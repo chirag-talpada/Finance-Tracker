@@ -35,7 +35,8 @@ function MainTable() {
 
 
   useEffect(()=>{
-    setTransactionDataCount(transactions[userID].length)
+  
+    setTransactionDataCount(transactions[userID]?.length)
     setTransactionData(transactions)
     
   },[transactionData, transactions, userID])
@@ -64,7 +65,7 @@ function MainTable() {
      
       let pageData = {};
       pageData.current = 1;
-      pageData.total_page = Math.ceil(transactionData[userID].length / PAGE_LIMIT);
+      pageData.total_page = Math.ceil(transactionData[userID]?.length / PAGE_LIMIT);
       setPage(pageData);
     }
   }, [transactionData, userID]);
@@ -183,14 +184,14 @@ function MainTable() {
             );
           })}
 
-          {transactionData?.[userID]===undefined || pagination(transactionData[userID], page.current).length === 0 ? (
+          {transactionData?.[userID]===undefined || pagination(transactionData[userID], page.current)?.length === 0 ? (
             <tr>
               <td colSpan={10}>No Data found</td>
             </tr>
           ):''}
         </tbody>
       </table>
-      {transactionData?.[userID] && transactionData[userID].length !== 0 && (
+      {transactionData?.[userID] && transactionData[userID]?.length !== 0 && (
         <PaginationFooter page={page} setPage={setPage} />
       )}
     </>

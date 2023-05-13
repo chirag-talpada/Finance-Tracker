@@ -9,11 +9,10 @@ import GroupTable from "./components/GroupTable/GroupTable";
 import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
-import {  getUserID, loggedout } from "../../services/authentication";
+import {  getUserID } from "../../services/authentication";
 
 import { useSelector } from "react-redux";
-
-
+import Cookies from 'js-cookie';
 
 
 const ShowTransaction = () => {
@@ -29,6 +28,10 @@ const ShowTransaction = () => {
     return state
   });
 
+ 
+  
+  
+  
 
   
 
@@ -52,7 +55,7 @@ const ShowTransaction = () => {
   };
 
   const logoutApp=()=>{
-    loggedout();
+    Cookies.remove('token');
     navigate('/')
   }
 

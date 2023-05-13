@@ -19,7 +19,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path="" element={<Signin />}></Route>
-            <Route exact path="/signup" element={<Signup />}></Route>
+            <Route  path="/signup" element={<Signup />}></Route>
 
             <Route
               path="transaction/add"
