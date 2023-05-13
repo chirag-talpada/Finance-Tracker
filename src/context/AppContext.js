@@ -18,8 +18,6 @@ const AppState = ({ children }) => {
     setTransaction(data);
     
     
-     
-    
   }
 
   return <appContext.Provider value={{transactions,updateTransactionData,deleteUserTransaction}}>

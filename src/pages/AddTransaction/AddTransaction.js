@@ -1,20 +1,28 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddTransaction.css";
 
 import Header from "./components/Header/Header";
 import Form from "../../components/Form";
 
+import { useDispatch,useSelector } from "react-redux";
+import { add } from "../../redux/transactionSlice";
 
 import { getImageData } from "../../services/ImageBase24";
 import { getUserID } from "../../services/authentication";
 import { convertDate } from "../../helper/date";
-import { appContext } from "../../context/AppContext";
+
 
 
 const AddTransaction = () => {
   const navigate = useNavigate();
-  const {transactions,updateTransactionData}=useContext(appContext);
+ 
+  const dispatch=useDispatch();
+  
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
+
 
   const initialFormValues = {
     transactionDate: "",
@@ -37,19 +45,21 @@ const AddTransaction = () => {
       transactionData.transactionDate
     );
 
+    
     let allUserData = transactions;
+    
 
     if (allUserData[userID] === undefined) {
       transactionData.id = 1;
       id = 1;
-      allUserData[userID] = [transactionData];
-      updateTransactionData(allUserData);
+      dispatch(add({data:transactionData,userID}))
+
     } else {
-      let prevData = transactions;
+      let prevData = {...transactions};
       transactionData.id = prevData[userID].length + 1;
-      id = prevData[userID].length + 1;
-      prevData[userID].push(transactionData);
-      updateTransactionData(prevData);
+      id = prevData[userID].length + 1;   
+      dispatch(add({data:transactionData,userID}))
+      
     }
 
     navigate(`/transaction/${id}`, {

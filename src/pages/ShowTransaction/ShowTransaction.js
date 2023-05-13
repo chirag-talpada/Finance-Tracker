@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShowTransaction.css";
 
@@ -9,32 +9,33 @@ import GroupTable from "./components/GroupTable/GroupTable";
 import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
-import { sortingData } from "../../utils/sorting";
 import {  getUserID, loggedout } from "../../services/authentication";
-import { appContext } from "../../context/AppContext";
+
+import { useSelector } from "react-redux";
+
+
 
 
 const ShowTransaction = () => {
-  const initialValues = {
-    transactionDate: 1,
-    monthYear: 1,
-    transactionType: 1,
-    fromAccount: 1,
-    toAccount: 1,
-    amount: 1,
-    notes: 1,
-  };
+ 
 
   const [transactionData, setTransactionData] = useState([]);
-  const [transactionDataCount, setTransactionDataCount] = useState(0);
   const [groupBy, setGroupBy] = useState("none");
-  const [toggleSort, setToggleSort] = useState(initialValues);
+
   const navigate=useNavigate();
 
-  const {transactions}=useContext(appContext);
+  
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
+
+
+  
+
 
   const getIntialData = () => { 
     let data = transactions;
+
     let userID=getUserID();
     return data[userID]??[];
   };
@@ -42,20 +43,10 @@ const ShowTransaction = () => {
   useEffect(() => {
     const data = getIntialData();
     setTransactionData(data);
-    setTransactionDataCount(data.length)
+
   }, []);
 
-  const sortColumn = (column) => {
-    sortingData(
-      column,
-      toggleSort,
-      getIntialData,
-      transactionData,
-      setToggleSort,
-      setTransactionData
-    );
-  };
-
+ 
   const onChangeHandler = (e) => {
     setGroupBy(e.target.value);
   };
@@ -86,11 +77,11 @@ const ShowTransaction = () => {
 
     
       {groupBy === "none" &&  (   
-        <MainTable sortColumn={sortColumn} transactionDataCount={transactionDataCount} setTransactionData={setTransactionData} transactionData={transactionData} />
+        <MainTable  />
       )}
 
       {groupBy !== "none" && (transactionData.length!==0) && (
-        <GroupTable groupBy={groupBy} transactionData={transactionData} />
+        <GroupTable groupBy={groupBy} />
       )}
 
       {groupBy !== "none" && transactionData.length===0 && (<h1 className="empty-data">there is no data</h1>)}

@@ -1,13 +1,16 @@
-import React,{useState,useEffect, useContext} from "react";
+import React,{useState,useEffect} from "react";
 import "./SerachMainTable.css";
 import { getUserID } from "../../../../services/authentication";
-import { appContext } from "../../../../context/AppContext";
+
+import { useSelector } from "react-redux";
 
 const SearchMainTable = ({setTransactionData}) => {
 
 
   const [searchTransactionData,setSearchTransactionData]=useState([]);
-  const {transactions}=useContext(appContext);
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
 
   useEffect(()=>{
     let data = transactions;
@@ -17,13 +20,20 @@ const SearchMainTable = ({setTransactionData}) => {
   },[])
 
   const searchData=(pattern)=>{
-  
+    
+    
+    
+
     let searchedResults=[...searchTransactionData].filter((data)=>{
         let dataString=Object.keys(data).filter(Allkey=>Allkey!=='receipt').map(key=>data[key]).join(' ');
+        
         return dataString.toLowerCase().includes(pattern.toLowerCase())
     });
+
     
-    setTransactionData(searchedResults);
+    setTransactionData((prev)=>{
+      return {...prev,[getUserID()]:searchedResults}
+    });
     
     
   }

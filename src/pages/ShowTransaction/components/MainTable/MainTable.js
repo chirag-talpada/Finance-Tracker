@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { PAGE_LIMIT } from "../../../../utils/constant";
@@ -7,39 +7,82 @@ import { pagination } from "../../../../utils/pagination";
 import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchMainTable from "../SerachTable/SerachMainTable";
 import { getUserID } from "../../../../services/authentication";
-import { appContext } from "../../../../context/AppContext";
+import { useSelector,useDispatch } from "react-redux";
+import { remove } from "../../../../redux/transactionSlice";
+import { sortingData } from "../../../../utils/sorting";
 
-function MainTable({ sortColumn, transactionDataCount,transactionData, setTransactionData }) {
+function MainTable() {
   const navigate = useNavigate();
   const [page, setPage] = useState({});
-  const [userID, ] = useState(getUserID());
-  const {transactions,deleteUserTransaction}=useContext(appContext);
+  const [userID] = useState(getUserID());
 
-  useEffect(() => {
-    if (transactionData.length) {
-      let pageData = {};
-      pageData.current = 1;
-      pageData.total_page = Math.ceil(transactionData.length / PAGE_LIMIT);
-      setPage(pageData);
-    }
-  }, [transactionData]);
 
-  const viewCard = (id) => {
-    navigate(`/transaction/${id}`,{state:{toast:false}});
+  const initialValues = {
+    transactionDate: 1,
+    monthYear: 1,
+    transactionType: 1,
+    fromAccount: 1,
+    toAccount: 1,
+    amount: 1,
+    notes: 1,
+  };
+  const [toggleSort, setToggleSort] = useState(initialValues);
+
+  const transactions = useSelector((state) => state?.transactions);
+  const dispatch=useDispatch();
+  const [transactionData, setTransactionData] = useState({ ...transactions });
+  const [transactionDataCount, setTransactionDataCount] = useState(0);
+
+
+  useEffect(()=>{
+    setTransactionDataCount(transactions[userID].length)
+    setTransactionData(transactions)
+    
+  },[transactionData, transactions, userID])
+
+  const getIntialData = () => { 
+    let data = transactions;
+
+    let userID=getUserID();
+    return data[userID]??[];
   };
 
-  const editTransaction=(id)=>{
-    navigate(`/transaction/edit/${id}`);
-  }
+  const sortColumn = (column) => {
+    sortingData(
+      column,
+      toggleSort,
+      getIntialData,
+      transactionData,
+      setToggleSort,
+      setTransactionData
+    );
+  };
 
-  const deleteTransaction=(id)=>{
-    // eslint-disable-next-line no-restricted-globals
-    if(confirm("Are you sure you want to delete this transaction?")===true){
-
-      deleteUserTransaction(userID,id) 
+  
+  useEffect(() => {
+    if (transactionData[userID]?.length) {
+     
+      let pageData = {};
+      pageData.current = 1;
+      pageData.total_page = Math.ceil(transactionData[userID].length / PAGE_LIMIT);
+      setPage(pageData);
     }
-    
-  }
+  }, [transactionData, userID]);
+
+  const viewCard = (id) => {
+    navigate(`/transaction/${id}`, { state: { toast: false } });
+  };
+
+  const editTransaction = (id) => {
+    navigate(`/transaction/edit/${id}`);
+  };
+
+  const deleteTransaction = (id) => {
+    if (window.confirm("Are you sure you want to delete this transaction?") === true) {
+      dispatch(remove({userID,id}));
+      
+    }
+  };
 
   const transactionHeader = [
     {
@@ -58,10 +101,11 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
 
   return (
     <>
-      
-      {transactionDataCount!==0 && <div className="flex">
-        <SearchMainTable setTransactionData={setTransactionData} />
-      </div>}
+      {transactionDataCount !== 0 && (
+        <div className="flex">
+          <SearchMainTable setTransactionData={setTransactionData} />
+        </div>
+      )}
 
       <table className="transaction-table">
         <thead>
@@ -82,7 +126,7 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
           </tr>
         </thead>
         <tbody>
-          {pagination(transactions[userID], page.current).map((raw, i) => {
+          {transactionData?.[userID] && pagination(transactionData[userID], page.current).map((raw, i) => {
             let rupees = new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
@@ -109,40 +153,46 @@ function MainTable({ sortColumn, transactionDataCount,transactionData, setTransa
                 <td>{raw.notes}</td>
                 <td>
                   <div className="tableflex">
-                  <button
-                    className="viewbtn"
-                    onClick={() => {
-                      viewCard(raw.id);
-                    }}
-                  >
-                    View
-                  </button>
-                  <button
-                    className="editbtn"
-                    onClick={() => {
-                      editTransaction(raw.id);
-                    }}
-                  >
-                    edit
-                  </button>
-                  <button
-                    className="deletebtn"
-                    onClick={() => {
-                      deleteTransaction(raw.id);
-                    }}
-                  >
-                    delete
-                  </button>
+                    <button
+                      className="viewbtn"
+                      onClick={() => {
+                        viewCard(raw.id);
+                      }}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="editbtn"
+                      onClick={() => {
+                        editTransaction(raw.id);
+                      }}
+                    >
+                      edit
+                    </button>
+                    <button
+                      className="deletebtn"
+                      onClick={() => {
+                        deleteTransaction(raw.id);
+                      }}
+                    >
+                      delete
+                    </button>
                   </div>
                 </td>
               </tr>
             );
           })}
 
-          {pagination(transactions[userID], page.current).length===0 && <tr><td colSpan={10}>No Data found</td></tr>}
+          {transactionData?.[userID]===undefined || pagination(transactionData[userID], page.current).length === 0 ? (
+            <tr>
+              <td colSpan={10}>No Data found</td>
+            </tr>
+          ):''}
         </tbody>
       </table>
-      { transactionData.length!==0 && <PaginationFooter page={page} setPage={setPage} />}
+      {transactionData?.[userID] && transactionData[userID].length !== 0 && (
+        <PaginationFooter page={page} setPage={setPage} />
+      )}
     </>
   );
 }

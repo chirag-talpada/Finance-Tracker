@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import "./EditTransaction.css";
@@ -7,13 +7,18 @@ import Form from "../../components/Form";
 import { getUserID } from "../../services/authentication";
 import { convertDate } from "../../helper/date";
 import { getImageData } from "../../services/ImageBase24";
-import { appContext } from "../../context/AppContext";
+
+import { useSelector, useDispatch } from "react-redux";
+import { update } from "../../redux/transactionSlice";
 
 const EditTransaction = () => {
   const [formValues, setFormValues] = useState({});
-  const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
-  const {transactions,updateTransactionData}=useContext(appContext);
+
+  const dispatch = useDispatch();
+  const { transactions } = useSelector((state) => {
+    return state;
+  });
 
   const { id } = useParams();
 
@@ -26,7 +31,7 @@ const EditTransaction = () => {
     );
 
     setFormValues(editedTransaction);
-    setTransaction(data);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -51,9 +56,9 @@ const EditTransaction = () => {
     );
 
     transactionData.id = Number(id);
-    let allTransactions = { ...transaction };
-    allTransactions[userID][Number(id) - 1] = { ...transactionData };
-    updateTransactionData(allTransactions)
+
+    dispatch(update({ data: transactionData, userID, id }));
+
     navigate(`/transaction/${id}`, {
       state: { toast: true, msg: "Transaction updated!" },
     });
