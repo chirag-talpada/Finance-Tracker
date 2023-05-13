@@ -4,13 +4,10 @@ import "./Signin.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toastOption } from "../../utils/constant";
-import {
-  isAlreadyLoggedIn,
-  storeToken,
-} from "../../services/authentication";
+import { isAlreadyLoggedIn, storeToken } from "../../services/authentication";
 import { useSelector } from "react-redux";
 
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const Signin = () => {
   const location = useLocation();
@@ -59,8 +56,8 @@ const Signin = () => {
 
       for (const data of users) {
         if (data.email === email && data.password === password) {
-          let token=storeToken(data.id);
-          Cookies.set('token', token, { expires: 1 });
+          let token = storeToken(data.id);
+          Cookies.set("token", token, { expires: 1 });
           validUser = true;
         }
       }

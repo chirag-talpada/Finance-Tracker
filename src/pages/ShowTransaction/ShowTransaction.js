@@ -3,66 +3,66 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShowTransaction.css";
 
-
 import MainTable from "./components/MainTable/MainTable";
 import GroupTable from "./components/GroupTable/GroupTable";
 import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
-import {  getUserID } from "../../services/authentication";
+import { getUserID } from "../../services/authentication";
 
 import { useSelector } from "react-redux";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
 
 const ShowTransaction = () => {
- 
-
   const [transactionData, setTransactionData] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  
-  const {transactions}=useSelector((state)=>{
-    return state
+  const { transactions } = useSelector((state) => {
+    return state;
   });
 
- 
-  
-  
-  
-
-  
-
-
-  const getIntialData = () => { 
+  const getIntialData = () => {
     let data = transactions;
 
-    let userID=getUserID();
-    return data[userID]??[];
+    let userID = getUserID();
+    return data[userID] ?? [];
   };
 
   useEffect(() => {
     const data = getIntialData();
     setTransactionData(data);
-
   }, []);
 
- 
   const onChangeHandler = (e) => {
     setGroupBy(e.target.value);
   };
 
-  const logoutApp=()=>{
-    Cookies.remove('token');
-    navigate('/')
-  }
+  const logoutApp = () => {
+    Cookies.remove("token");
+    navigate("/");
+  };
 
   return (
     <div className="transection-container">
-      <button className="add-transaction-btn" onClick={()=>{navigate('/transaction/add')}}>ADD +</button>
-      <button className="logout-btn" onClick={()=>{logoutApp()}}> logout</button>
+      <button
+        className="add-transaction-btn"
+        onClick={() => {
+          navigate("/transaction/add");
+        }}
+      >
+        ADD +
+      </button>
+      <button
+        className="logout-btn"
+        onClick={() => {
+          logoutApp();
+        }}
+      >
+        {" "}
+        logout
+      </button>
       <h1>All Transaction</h1>
 
       <div className="groupBy-row">
@@ -75,19 +75,17 @@ const ShowTransaction = () => {
             cssClass="groupBy-ddl"
           />
         </div>
-       
       </div>
 
-    
-      {groupBy === "none" &&  (   
-        <MainTable  />
-      )}
+      {groupBy === "none" && <MainTable />}
 
-      {groupBy !== "none" && (transactionData.length!==0) && (
+      {groupBy !== "none" && transactionData.length !== 0 && (
         <GroupTable groupBy={groupBy} />
       )}
 
-      {groupBy !== "none" && transactionData.length===0 && (<h1 className="empty-data">there is no data</h1>)}
+      {groupBy !== "none" && transactionData.length === 0 && (
+        <h1 className="empty-data">there is no data</h1>
+      )}
     </div>
   );
 };

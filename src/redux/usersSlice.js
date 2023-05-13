@@ -10,9 +10,6 @@ const usersSlice = createSlice({
   reducers: {
     addUSer(state, action) {
       if (state.length) {
-        console.log("yes", action.payload);
-        console.log("data", [...state, action.payload]);
-
         state = [...state, action.payload];
       } else {
         state = [action.payload];
