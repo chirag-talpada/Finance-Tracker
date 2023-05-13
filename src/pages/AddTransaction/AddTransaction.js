@@ -1,76 +1,82 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddTransaction.css";
-
-
 
 import Header from "./components/Header/Header";
 import Form from "../../components/Form";
 
-import { initialValues } from "../../utils/constant";
+import { useDispatch,useSelector } from "react-redux";
+import { add } from "../../redux/transactionSlice";
 
-import { addData, getData } from "../../services/localStorage";
 import { getImageData } from "../../services/ImageBase24";
 import { getUserID } from "../../services/authentication";
+import { convertDate } from "../../helper/date";
 
-import { isValidateForm } from "../../utils/Validation/index";
+
 
 const AddTransaction = () => {
+  const navigate = useNavigate();
+ 
+  const dispatch=useDispatch();
   
-  const [formErr, setFormErr] = useState({});
-  const [formValues, setFormValues] = useState(initialValues);
-  const navigate=useNavigate();
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
 
-  const AddTransaction = async (e) => {
-    e.preventDefault();
 
-    let isValid = isValidateForm(formValues, setFormErr);
-
-    if (isValid) {
-      let img = await getImageData(formValues.receipt);
-      let transactionData = { ...formValues };
-      let id;
-      let userID=getUserID();
-      transactionData.receipt = img;
-     
-
-      let allUserData=getData("transaction");
-    
-
-      if (allUserData[userID]===undefined) {
-  
-        transactionData.id = 1;
-        id=1;
-        allUserData[userID]=[transactionData]
-        addData("transaction", JSON.stringify(allUserData));
-      } else {
-        let prevData = getData("transaction");
-        transactionData.id = prevData[userID].length + 1;
-        id=prevData[userID].length + 1;
-        prevData[userID].push(transactionData);
-        addData("transaction", JSON.stringify(prevData));
-      }
-
-      navigate(`/transaction/${id}`,{state:{toast:true,msg:'Transaction Added!'}});
-      
-    }
+  const initialFormValues = {
+    transactionDate: "",
+    monthYear: "",
+    transactionType: "",
+    fromAccount: "",
+    toAccount: "",
+    amount: "",
+    notes: "",
   };
 
+  const AddTransaction = async (data) => {
+    let img = await getImageData(data.receipt[0]);
 
+    let transactionData = { ...data };
+    let id;
+    let userID = getUserID();
+    transactionData.receipt = img;
+    transactionData.transactionDate = convertDate(
+      transactionData.transactionDate
+    );
+
+    
+    let allUserData = transactions;
+    
+
+    if (allUserData[userID] === undefined) {
+      transactionData.id = 1;
+      id = 1;
+      dispatch(add({data:transactionData,userID}))
+
+    } else {
+      let prevData = {...transactions};
+      transactionData.id = prevData[userID].length + 1;
+      id = prevData[userID].length + 1;   
+      dispatch(add({data:transactionData,userID}))
+      
+    }
+
+    navigate(`/transaction/${id}`, {
+      state: { toast: true, msg: "Transaction Added!" },
+    });
+  };
 
   return (
     <div className="container">
-     
       <div className="add-form">
         <Header></Header>
 
         <div className="feilds-container">
           <Form
             onSubmitMethod={AddTransaction}
-            setFormValues={setFormValues}
-            formErr={formErr}
-            formValues={formValues}
             buttonText="Add"
+            formValues={initialFormValues}
           />
         </div>
       </div>

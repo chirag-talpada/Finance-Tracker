@@ -2,36 +2,43 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShowTransaction.css";
-import { getData } from "../../services/localStorage";
+
 
 import MainTable from "./components/MainTable/MainTable";
 import GroupTable from "./components/GroupTable/GroupTable";
 import SelectDropDown from "../../components/SelectDropDown/SelectDropDown";
 
 import { GroupByOption } from "../../utils/constant";
-import { sortingData } from "../../utils/sorting";
-import {  getUserID, loggedout } from "../../services/authentication";
+import {  getUserID } from "../../services/authentication";
+
+import { useSelector } from "react-redux";
+import Cookies from 'js-cookie';
 
 
 const ShowTransaction = () => {
-  const initialValues = {
-    transactionDate: 1,
-    monthYear: 1,
-    transactionType: 1,
-    fromAccount: 1,
-    toAccount: 1,
-    amount: 1,
-    notes: 1,
-  };
+ 
 
   const [transactionData, setTransactionData] = useState([]);
-  const [transactionDataCount, setTransactionDataCount] = useState(0);
   const [groupBy, setGroupBy] = useState("none");
-  const [toggleSort, setToggleSort] = useState(initialValues);
+
   const navigate=useNavigate();
 
-  const getIntialData = () => {
-    let data = getData("transaction");
+  
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
+
+ 
+  
+  
+  
+
+  
+
+
+  const getIntialData = () => { 
+    let data = transactions;
+
     let userID=getUserID();
     return data[userID]??[];
   };
@@ -39,26 +46,16 @@ const ShowTransaction = () => {
   useEffect(() => {
     const data = getIntialData();
     setTransactionData(data);
-    setTransactionDataCount(data.length)
+
   }, []);
 
-  const sortColumn = (column) => {
-    sortingData(
-      column,
-      toggleSort,
-      getIntialData,
-      transactionData,
-      setToggleSort,
-      setTransactionData
-    );
-  };
-
+ 
   const onChangeHandler = (e) => {
     setGroupBy(e.target.value);
   };
 
   const logoutApp=()=>{
-    loggedout();
+    Cookies.remove('token');
     navigate('/')
   }
 
@@ -83,11 +80,11 @@ const ShowTransaction = () => {
 
     
       {groupBy === "none" &&  (   
-        <MainTable sortColumn={sortColumn} transactionDataCount={transactionDataCount} setTransactionData={setTransactionData} transactionData={transactionData} />
+        <MainTable  />
       )}
 
       {groupBy !== "none" && (transactionData.length!==0) && (
-        <GroupTable groupBy={groupBy} transactionData={transactionData} />
+        <GroupTable groupBy={groupBy} />
       )}
 
       {groupBy !== "none" && transactionData.length===0 && (<h1 className="empty-data">there is no data</h1>)}

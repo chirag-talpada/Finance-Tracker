@@ -1,11 +1,15 @@
+import { getUserID } from "../../services/authentication";
 import {
     DateColumnsName,
     charactesColumnsName,
     numberColumnsName
   } from "../constant/index";
 
-export const sortingData=function(column,toggleSort,getIntialData,tableData,setToggleSort,setTableData){
+export const sortingData=function(column,toggleSort,getIntialData,transactionData,setToggleSort,setTableData){
     let sorted;
+
+    let tableData={...transactionData};
+    tableData=tableData[getUserID()]
 
     if (DateColumnsName.includes(column)) {
       if (toggleSort[column] === 1) {
@@ -55,7 +59,9 @@ export const sortingData=function(column,toggleSort,getIntialData,tableData,setT
       }
     }
 
-    setTableData(sorted);
+    setTableData((prev)=>{
+      return {...prev,[getUserID()]:sorted}
+    });
 
     setToggleSort((prev) => {
       let num = prev[column] === 3 ? 1 : prev[column] + 1;

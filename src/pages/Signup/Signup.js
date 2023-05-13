@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./Signup.css";
 import { Link,useNavigate } from "react-router-dom";
-import { getUsersID, saveUser } from "../../services/localStorage";
+import { getUsersID } from "../../services/localStorage";
 import { isAlreadyLoggedIn } from "../../services/authentication";
+import { useDispatch } from "react-redux";
+import { addUSer } from "../../redux/usersSlice";
 
 const Signup = () => {
   const intialvalues = { name: "", email: "", password: "", cPassword: "" };
   const [formvalues, setFormValues] = useState(intialvalues);
   const [formerr, setFormerr] = useState(intialvalues);
+
+  const dispatch=useDispatch();
   const navigate=useNavigate();
 
 
@@ -69,8 +73,8 @@ const Signup = () => {
       userData.password=formvalues.password;
       userData.id=userID;
       
-      saveUser(userData);
-
+     
+      dispatch(addUSer(userData));
       navigate('/',{state:{toast:true,msg:'User added successfully'}})
 
       

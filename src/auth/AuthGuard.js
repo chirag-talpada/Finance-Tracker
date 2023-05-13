@@ -1,21 +1,22 @@
-import React,{useEffect} from 'react'
-import { verifyToken } from '../services/authentication'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { verifyToken } from "../services/authentication";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
-const AuthGuard = ({Component}) => {
+const AuthGuard = ({ Component }) => {
+  const navigate = useNavigate();
 
-    const navigate=useNavigate();
+  useEffect(() => {
+    const token = Cookies.get("token");
 
-    useEffect(()=>{
-        if(!verifyToken()){
-            navigate('/')
-        }
+    if (!verifyToken(token)) {
+      navigate("/");
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+  }, []);
 
-  return (
-    <Component/>
-  )
-}
+  return <Component />;
+};
 
-export default AuthGuard
+export default AuthGuard;

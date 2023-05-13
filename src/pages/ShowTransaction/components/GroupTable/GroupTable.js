@@ -8,6 +8,8 @@ import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchGroupTable from "../SerachTable/SearchGroupTable";
 import { PAGE_LIMIT } from "../../../../utils/constant";
 import { pagination } from "../../../../utils/pagination";
+import { getUserID } from "../../../../services/authentication";
+import { useSelector } from "react-redux";
 
 const groupColumns = {
   ["Month Year"]: "monthYear",
@@ -16,12 +18,22 @@ const groupColumns = {
   ["To Account"]: "toAccount",
 };
 
-const GroupTable = ({ groupBy, transactionData }) => {
+const GroupTable = ({ groupBy }) => {
+
   const [groupDataTable, setGroupDataTable] = useState({});
   const [searchGroupDataTable, setSearchGroupDataTable] = useState({});
   const [page, setPage] = useState({});
- 
+  
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
+  const [transactionData, setTransactionData] = useState(transactions[getUserID()]);
 
+  useEffect(()=>{
+    setTransactionData(transactions[getUserID()])
+    
+    
+  },[transactions])
 
   useEffect(() => {
     let groupData = {};
@@ -37,7 +49,7 @@ const GroupTable = ({ groupBy, transactionData }) => {
     setGroupDataTable(groupData);
     setSearchGroupDataTable(groupData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupBy]);
+  }, [groupBy,transactionData]);
 
   useEffect(() => {
     if (Object.keys(groupDataTable).length) {

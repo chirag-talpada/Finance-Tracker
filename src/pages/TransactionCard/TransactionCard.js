@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./TransactionCard.css";
 
 import { useParams } from "react-router-dom";
-import { getData } from "../../services/localStorage";
+
 
 import Card from "./components/Card/Card";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,16 +11,23 @@ import "react-toastify/dist/ReactToastify.css";
 import { toastOption } from "../../utils/constant";
 import { getUserID } from "../../services/authentication";
 
+import { useSelector } from "react-redux";
+
 const TransactionCard = () => {
   const { id } = useParams();
   const location = useLocation();
   const [transaction, setTransaction] = useState({});
   const navigate=useNavigate();
+  const {transactions}=useSelector((state)=>{
+    return state
+  });
+
   
   useEffect(() => {
-    let data = getData("transaction");
+    let data = transactions;
     let userID=getUserID();
-    
+
+
     const [transactionCardData]=data[userID].filter(tran=>tran.id===Number(id))
     
     

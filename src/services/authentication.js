@@ -1,22 +1,11 @@
 import { getUserData } from "./localStorage";
 
-export const isAuthenticated=(email,password)=>{
-    let userData=getUserData();
 
-    for (const data of userData) {
-        if(data.email===email && data.password===password){
-            storeToken(data.id);
-            return true;
-        }
-    }
-
-    return false;
-
-}
-
-const storeToken=(id)=>{
+export const storeToken=(id)=>{
     let token=`sjbsnjdfbebfiefeifowhf,${id},asjhsjkcvbjkscbscjkbjsckbjsc`;
     localStorage.setItem('token',token);
+    return token;
+    
 }
 
 export const getUserID=()=>{
@@ -37,8 +26,8 @@ const hasUser=(id)=>{
     return false;
 }
 
-export const verifyToken=()=>{
-    let token=localStorage.getItem('token');
+export const verifyToken=(token)=>{
+    
     if(token){
         let tokenID=token.split(',')[1];
         if(tokenID){
@@ -52,14 +41,11 @@ export const verifyToken=()=>{
     
 }
 
-export const isAlreadyLoggedIn=()=>{
-    let token=localStorage.getItem('token');
+export const isAlreadyLoggedIn=(token)=>{
+    
     if(token){
        return true;
     }
     return false;
 }
 
-export const loggedout=()=>{
-    localStorage.removeItem('token');
-}

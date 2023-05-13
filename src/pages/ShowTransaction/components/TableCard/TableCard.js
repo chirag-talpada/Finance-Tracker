@@ -3,9 +3,13 @@ import "./TableCard.css";
 import { useNavigate } from "react-router-dom";
 
 import { sortingData } from "../../../../utils/sorting/index";
+import { useDispatch } from "react-redux";
+import { remove } from "../../../../redux/transactionSlice";
+import { getUserID } from "../../../../services/authentication";
 
 const TableCard = ({ tableHeader, tableBody }) => {
   const navigate = useNavigate();
+  const dispatch=useDispatch();
   const [tableData, setTableData] = useState(tableBody);
 
   const initialValues = {
@@ -62,6 +66,12 @@ const TableCard = ({ tableHeader, tableBody }) => {
     setTableData(tableBody)
   },[tableBody])
  
+  const deleteTransaction = (id) => {
+    if (window.confirm("Are you sure you want to delete this transaction?") === true) {
+      dispatch(remove({userID:getUserID(),id}));
+      
+    }
+  };
   
 
   return (
@@ -134,6 +144,14 @@ const TableCard = ({ tableHeader, tableBody }) => {
                   >
                     edit
                   </button>
+                  <button
+                      className="deletebtn"
+                      onClick={() => {
+                        deleteTransaction(raw.id);
+                      }}
+                    >
+                      delete
+                    </button>
                   </div>
                 </td>
               </tr>

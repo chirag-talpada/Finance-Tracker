@@ -54,3 +54,5 @@ export const initialValues = {
   notes: "",
   receipt: null,
 };
+
+export const validExtemsions=['image/png','image/jpeg','image/jpg'];
