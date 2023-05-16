@@ -5,11 +5,16 @@ import {
     numberColumnsName
   } from "../constant/index";
 
-export const sortingData=function(column,toggleSort,getIntialData,transactionData,setToggleSort,setTableData){
-    let sorted;
+export const sortingData=function(column,toggleSort,getIntialData,transactionData,setToggleSort,setTableData,type){
+    let sorted,tableData;
 
-    let tableData={...transactionData};
-    tableData=tableData[getUserID()]
+   
+    if(type==="group"){
+      tableData=[...transactionData];
+    }else{
+      tableData={...transactionData};
+      tableData=tableData[getUserID()]
+    }
 
     if (DateColumnsName.includes(column)) {
       if (toggleSort[column] === 1) {
@@ -59,12 +64,19 @@ export const sortingData=function(column,toggleSort,getIntialData,transactionDat
       }
     }
 
-    setTableData((prev)=>{
-      return {...prev,[getUserID()]:sorted}
-    });
+    if(type==="group"){
+      setTableData(sorted);
+    }else{
+      setTableData((prev)=>{
+        return {...prev,[getUserID()]:sorted}
+      });
+    }
+
+    
 
     setToggleSort((prev) => {
       let num = prev[column] === 3 ? 1 : prev[column] + 1;
       return { ...prev, [column]: num };
     });
 }
+
