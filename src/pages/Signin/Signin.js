@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Signin.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -150,4 +150,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default memo(Signin);

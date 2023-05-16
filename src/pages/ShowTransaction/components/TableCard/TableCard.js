@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./TableCard.css";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +9,7 @@ import { getUserID } from "../../../../services/authentication";
 
 const TableCard = ({ tableHeader, tableBody }) => {
   const navigate = useNavigate();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const [tableData, setTableData] = useState(tableBody);
 
   const initialValues = {
@@ -25,13 +25,13 @@ const TableCard = ({ tableHeader, tableBody }) => {
   const [toggleSort, setToggleSort] = useState(initialValues);
 
   const viewCard = (id) => {
-    navigate(`/transaction/${id}`,{state:{toast:false}});
+    navigate(`/transaction/${id}`, { state: { toast: false } });
   };
 
-  const editTransaction=(id)=>{
+  const editTransaction = (id) => {
     navigate(`/transaction/edit/${id}`);
-  }
-  
+  };
+
   const getIntialData = () => {
     return tableBody;
   };
@@ -43,7 +43,8 @@ const TableCard = ({ tableHeader, tableBody }) => {
       getIntialData,
       tableData,
       setToggleSort,
-      setTableData
+      setTableData,
+      "group"
     );
   };
 
@@ -62,17 +63,18 @@ const TableCard = ({ tableHeader, tableBody }) => {
     { title: "Action" },
   ];
 
-  useEffect(()=>{
-    setTableData(tableBody)
-  },[tableBody])
- 
+  useEffect(() => {
+    setTableData(tableBody);
+  }, [tableBody]);
+
   const deleteTransaction = (id) => {
-    if (window.confirm("Are you sure you want to delete this transaction?") === true) {
-      dispatch(remove({userID:getUserID(),id}));
-      
+    if (
+      window.confirm("Are you sure you want to delete this transaction?") ===
+      true
+    ) {
+      dispatch(remove({ userID: getUserID(), id }));
     }
   };
-  
 
   return (
     <div>
@@ -90,9 +92,7 @@ const TableCard = ({ tableHeader, tableBody }) => {
                       {header.title}
                     </span>
                   ) : (
-                    <span className="tab-sort-btn">
-                      {header.title}
-                    </span>
+                    <span className="tab-sort-btn">{header.title}</span>
                   )}
                 </td>
               );
@@ -100,7 +100,6 @@ const TableCard = ({ tableHeader, tableBody }) => {
           </tr>
         </thead>
         <tbody>
-          
           {tableData.map((raw, i) => {
             let rupees = new Intl.NumberFormat("en-IN", {
               style: "currency",
@@ -127,24 +126,24 @@ const TableCard = ({ tableHeader, tableBody }) => {
                 </td>
                 <td>{raw.notes}</td>
                 <td>
-                <div className="tableflex">
-                  <button
-                    className="viewbtn"
-                    onClick={() => {
-                      viewCard(raw.id);
-                    }}
-                  >
-                    View
-                  </button>
-                  <button
-                    className="editbtn"
-                    onClick={() => {
-                      editTransaction(raw.id);
-                    }}
-                  >
-                    edit
-                  </button>
-                  <button
+                  <div className="tableflex">
+                    <button
+                      className="viewbtn"
+                      onClick={() => {
+                        viewCard(raw.id);
+                      }}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="editbtn"
+                      onClick={() => {
+                        editTransaction(raw.id);
+                      }}
+                    >
+                      edit
+                    </button>
+                    <button
                       className="deletebtn"
                       onClick={() => {
                         deleteTransaction(raw.id);
@@ -157,7 +156,11 @@ const TableCard = ({ tableHeader, tableBody }) => {
               </tr>
             );
           })}
-          {tableData.length===0 && <tr><td colSpan={10}>Data Not Found</td></tr>}
+          {tableData.length === 0 && (
+            <tr>
+              <td colSpan={10}>Data Not Found</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

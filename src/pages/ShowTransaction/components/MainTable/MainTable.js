@@ -7,7 +7,7 @@ import { pagination } from "../../../../utils/pagination";
 import PaginationFooter from "../PaginationFooter/PaginationFooter";
 import SearchMainTable from "../SerachTable/SerachMainTable";
 import { getUserID } from "../../../../services/authentication";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { remove } from "../../../../redux/transactionSlice";
 import { sortingData } from "../../../../utils/sorting";
 
@@ -15,7 +15,6 @@ function MainTable() {
   const navigate = useNavigate();
   const [page, setPage] = useState({});
   const [userID] = useState(getUserID());
-
 
   const initialValues = {
     transactionDate: 1,
@@ -29,23 +28,20 @@ function MainTable() {
   const [toggleSort, setToggleSort] = useState(initialValues);
 
   const transactions = useSelector((state) => state?.transactions);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const [transactionData, setTransactionData] = useState({ ...transactions });
   const [transactionDataCount, setTransactionDataCount] = useState(0);
 
+  useEffect(() => {
+    setTransactionDataCount(transactions[userID]?.length);
+    //setTransactionData(transactions)
+  }, [transactionData, transactions, userID]);
 
-  useEffect(()=>{
-  
-    setTransactionDataCount(transactions[userID]?.length)
-    setTransactionData(transactions)
-    
-  },[transactionData, transactions, userID])
-
-  const getIntialData = () => { 
+  const getIntialData = () => {
     let data = transactions;
 
-    let userID=getUserID();
-    return data[userID]??[];
+    let userID = getUserID();
+    return data[userID] ?? [];
   };
 
   const sortColumn = (column) => {
@@ -55,17 +51,18 @@ function MainTable() {
       getIntialData,
       transactionData,
       setToggleSort,
-      setTransactionData
+      setTransactionData,
+      "main"
     );
   };
 
-  
   useEffect(() => {
     if (transactionData[userID]?.length) {
-     
       let pageData = {};
       pageData.current = 1;
-      pageData.total_page = Math.ceil(transactionData[userID]?.length / PAGE_LIMIT);
+      pageData.total_page = Math.ceil(
+        transactionData[userID]?.length / PAGE_LIMIT
+      );
       setPage(pageData);
     }
   }, [transactionData, userID]);
@@ -79,9 +76,11 @@ function MainTable() {
   };
 
   const deleteTransaction = (id) => {
-    if (window.confirm("Are you sure you want to delete this transaction?") === true) {
-      dispatch(remove({userID,id}));
-      
+    if (
+      window.confirm("Are you sure you want to delete this transaction?") ===
+      true
+    ) {
+      dispatch(remove({ userID, id }));
     }
   };
 
@@ -127,68 +126,72 @@ function MainTable() {
           </tr>
         </thead>
         <tbody>
-          {transactionData?.[userID] && pagination(transactionData[userID], page.current).map((raw, i) => {
-            let rupees = new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(raw.amount);
+          {transactionData?.[userID] &&
+            pagination(transactionData[userID], page.current).map((raw, i) => {
+              let rupees = new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(raw.amount);
 
-            return (
-              <tr key={i}>
-                <td>{raw.id}</td>
-                <td>{raw.transactionDate}</td>
-                <td>{raw.monthYear}</td>
-                <td>{raw.transactionType}</td>
-                <td>{raw.fromAccount}</td>
-                <td>{raw.toAccount}</td>
-                <td>{rupees}</td>
-                <td>
-                  <div className="table-image">
-                    <img
-                      src={`data:image/${raw.receipt.extension};base64,${raw.receipt.base24String}`}
-                      alt="img"
-                      className="receipt-img"
-                    />
-                  </div>
-                </td>
-                <td>{raw.notes}</td>
-                <td>
-                  <div className="tableflex">
-                    <button
-                      className="viewbtn"
-                      onClick={() => {
-                        viewCard(raw.id);
-                      }}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="editbtn"
-                      onClick={() => {
-                        editTransaction(raw.id);
-                      }}
-                    >
-                      edit
-                    </button>
-                    <button
-                      className="deletebtn"
-                      onClick={() => {
-                        deleteTransaction(raw.id);
-                      }}
-                    >
-                      delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={i}>
+                  <td>{raw.id}</td>
+                  <td>{raw.transactionDate}</td>
+                  <td>{raw.monthYear}</td>
+                  <td>{raw.transactionType}</td>
+                  <td>{raw.fromAccount}</td>
+                  <td>{raw.toAccount}</td>
+                  <td>{rupees}</td>
+                  <td>
+                    <div className="table-image">
+                      <img
+                        src={`data:image/${raw.receipt.extension};base64,${raw.receipt.base24String}`}
+                        alt="img"
+                        className="receipt-img"
+                      />
+                    </div>
+                  </td>
+                  <td>{raw.notes}</td>
+                  <td>
+                    <div className="tableflex">
+                      <button
+                        className="viewbtn"
+                        onClick={() => {
+                          viewCard(raw.id);
+                        }}
+                      >
+                        View
+                      </button>
+                      <button
+                        className="editbtn"
+                        onClick={() => {
+                          editTransaction(raw.id);
+                        }}
+                      >
+                        edit
+                      </button>
+                      <button
+                        className="deletebtn"
+                        onClick={() => {
+                          deleteTransaction(raw.id);
+                        }}
+                      >
+                        delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
 
-          {transactionData?.[userID]===undefined || pagination(transactionData[userID], page.current)?.length === 0 ? (
+          {transactionData?.[userID] === undefined ||
+          pagination(transactionData[userID], page.current)?.length === 0 ? (
             <tr>
               <td colSpan={10}>No Data found</td>
             </tr>
-          ):''}
+          ) : (
+            ""
+          )}
         </tbody>
       </table>
       {transactionData?.[userID] && transactionData[userID]?.length !== 0 && (
